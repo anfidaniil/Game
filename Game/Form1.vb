@@ -7,6 +7,7 @@
         input = New InputState(False, False, False, False)
         world = New World(Me.CreateGraphics(), input)
         world.CreatePlayer()
+        world.CreateEnemy()
         lastTime = DateTime.Now
         Timer1.Interval = 16
         Timer1.Start()
