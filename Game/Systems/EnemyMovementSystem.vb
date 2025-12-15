@@ -19,10 +19,9 @@
                     dx = (x - t.pos.X)
                     dy = (y - t.pos.Y)
 
-                    Dim magnitude As Double = (Math.Sqrt(dx * dx + dy * dy))
-
-                    dx = dx / magnitude
-                    dy = dy / magnitude
+                    Dim norm = NormaliseVector(dx, dy)
+                    dx = norm(0)
+                    dy = norm(1)
                 End If
                     t.pos = New PointF(
                         t.pos.X + dx * m.speed * dt,

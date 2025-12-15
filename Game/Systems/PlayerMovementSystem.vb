@@ -21,12 +21,10 @@
                     If input.down Then dy += 1
                     If input.left Then dx -= 1
                     If input.right Then dx += 1
-                    Dim magnitude As Double = (Math.Sqrt(dx * dx + dy * dy))
 
-                    If (magnitude <> 0) Then
-                        dx = dx / magnitude
-                        dy = dy / magnitude
-                    End If
+                    Dim norm = NormaliseVector(dx, dy)
+                    dx = norm(0)
+                    dy = norm(1)
                 End If
 
                 t.pos = New PointF(
