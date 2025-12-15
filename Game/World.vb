@@ -10,8 +10,11 @@ Public Class World
 
     Private Systems As New List(Of ISystem)
 
+    Public PlayerID As Integer
+
     Public Sub New(g As Graphics, input As InputState)
         Systems.Add(New PlayerMovementSystem(input))
+        Systems.Add(New EnemyMovementSystem())
         Systems.Add(New RenderSystem(g))
     End Sub
 
@@ -29,6 +32,7 @@ Public Class World
 
     Public Sub CreatePlayer()
         Dim player = EntityManager.CreateEntity()
+        PlayerID = player
 
         Transforms.AddComponent(player, New TransformComponent With {
             .pos = New PointF(200, 200)
@@ -53,14 +57,13 @@ Public Class World
         })
 
         Movements.AddComponent(enemy, New MovementComponent With {
-            .speed = 200.0F
+            .speed = 100.0F
         })
 
         Renders.AddComponent(enemy, New RenderComponent With {
             .size = 32,
             .brush = Brushes.Red
         })
-
     End Sub
 
 End Class

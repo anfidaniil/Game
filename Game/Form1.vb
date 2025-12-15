@@ -9,7 +9,7 @@
         world.CreatePlayer()
         world.CreateEnemy()
         lastTime = DateTime.Now
-        Timer1.Interval = 16
+        Timer1.Interval = 5
         Timer1.Start()
     End Sub
 

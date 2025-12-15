@@ -13,16 +13,21 @@
                 Dim t = kv.Value
                 Dim m = world.Movements.GetComponent(id)
 
-                Dim dx As Single = 0
-                Dim dy As Single = 0
+                Dim dx As Double = 0
+                Dim dy As Double = 0
 
                 If world.Players.HasComponent(id) Then
                     If input.up Then dy -= 1
                     If input.down Then dy += 1
                     If input.left Then dx -= 1
                     If input.right Then dx += 1
-                End If
+                    Dim magnitude As Double = (Math.Sqrt(dx * dx + dy * dy))
 
+                    If (magnitude <> 0) Then
+                        dx = dx / magnitude
+                        dy = dy / magnitude
+                    End If
+                End If
 
                 t.pos = New PointF(
                     t.pos.X + dx * m.speed * dt,
