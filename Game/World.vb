@@ -13,7 +13,7 @@ Public Class World
 
     Public PlayerID As Integer
 
-    Public Const MAX_ACCELERATION = 1000.0F
+    Public Const MAX_ACCELERATION = 200.0F
     Public Const MAX_VELOCITY = 200.0F
 
     Public Sub New(g As Graphics, input As InputState)
@@ -65,7 +65,8 @@ Public Class World
 
         Movements.AddComponent(enemy, New MovementComponent With {
             .velocity = New PointF(0F, 0F),
-            .acceleration = New PointF(0F, 0F)
+            .acceleration = New PointF(0F, 0F),
+            .damping = 1.0F
         })
 
         Renders.AddComponent(enemy, New RenderComponent With {

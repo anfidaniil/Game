@@ -17,6 +17,8 @@
                         x - t.pos.X,
                         y - t.pos.Y
                     )
+                    If Math.Abs(a.X) < 0.1F Then a.X = 0
+                    If Math.Abs(a.Y) < 0.1F Then a.Y = 0
 
                     Dim norm = NormalisePointFVector(a)
                     m.acceleration = New PointF(
