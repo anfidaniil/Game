@@ -22,14 +22,15 @@
                     If input.left Then dx -= 1
                     If input.right Then dx += 1
 
-                    Dim norm = NormaliseVector(dx, dy)
-                    dx = norm(0)
-                    dy = norm(1)
+                    Dim a = New PointF(
+                        dx,
+                        dy
+                    )
+                    Dim norm = NormalisePointFVector(a)
+                    m.acceleration = New PointF(
+                        norm.X * World.MAX_ACCELERATION * 2,
+                        norm.Y * World.MAX_ACCELERATION * 2)
                 End If
-
-                t.pos = New PointF(
-                    t.pos.X + dx * m.speed * dt,
-                    t.pos.Y + dy * m.speed * dt)
             End If
         Next
     End Sub

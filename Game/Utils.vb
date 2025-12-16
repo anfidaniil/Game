@@ -13,4 +13,20 @@
 
         Return res
     End Function
+
+    Function NormalisePointFVector(vec As PointF) As PointF
+        Dim res As PointF
+        Dim magnitude As Double = (Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y))
+
+        If (magnitude <> 0) Then
+            res = New PointF(
+                vec.X / magnitude,
+                vec.Y / magnitude
+            )
+        End If
+
+        Return res
+    End Function
+
+
 End Module

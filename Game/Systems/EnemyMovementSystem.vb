@@ -8,24 +8,23 @@
                 Dim t = kv.Value
                 Dim m = world.Movements.GetComponent(id)
 
-                Dim dx As Double = 0
-                Dim dy As Double = 0
-
-                If Not world.Players.HasComponent(id) Then
+                If world.Enemies.HasComponent(id) Then
                     Dim playerPos = world.Transforms.GetComponent(world.PlayerID)
                     Dim x = playerPos.pos.X
                     Dim y = playerPos.pos.Y
 
-                    dx = (x - t.pos.X)
-                    dy = (y - t.pos.Y)
+                    Dim a = New PointF(
+                        x - t.pos.X,
+                        y - t.pos.Y
+                    )
 
-                    Dim norm = NormaliseVector(dx, dy)
-                    dx = norm(0)
-                    dy = norm(1)
+                    Dim norm = NormalisePointFVector(a)
+                    m.acceleration = New PointF(
+                        norm.X * World.MAX_ACCELERATION,
+                        norm.Y * World.MAX_ACCELERATION
+                    )
                 End If
-                    t.pos = New PointF(
-                        t.pos.X + dx * m.speed * dt,
-                        t.pos.Y + dy * m.speed * dt)
+
             End If
         Next
     End Sub

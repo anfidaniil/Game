@@ -7,14 +7,18 @@ Public Class World
     Public Movements As New ComponentStore(Of MovementComponent)
     Public Renders As New ComponentStore(Of RenderComponent)
     Public Players As New ComponentStore(Of PlayerComponent)
+    Public Enemies As New ComponentStore(Of EnemyComponent)
 
     Private Systems As New List(Of ISystem)
 
     Public PlayerID As Integer
 
+    Public Const MAX_ACCELERATION = 1000.0F
+    Public Const MAX_VELOCITY = 200.0F
+
     Public Sub New(g As Graphics, input As InputState)
-        'Systems.Add(New PlayerMovementSystem(input))
-        'Systems.Add(New EnemyMovementSystem())
+        Systems.Add(New PlayerMovementSystem(input))
+        Systems.Add(New EnemyMovementSystem())
         Systems.Add(New MovementSystem())
         Systems.Add(New RenderSystem(g))
     End Sub
@@ -40,7 +44,9 @@ Public Class World
         })
 
         Movements.AddComponent(player, New MovementComponent With {
-            .speed = 200.0F
+            .velocity = New PointF(0F, 0F),
+            .acceleration = New PointF(0F, 0F),
+            .damping = 2.0F
         })
 
         Renders.AddComponent(player, New RenderComponent With {
@@ -58,28 +64,32 @@ Public Class World
         })
 
         Movements.AddComponent(enemy, New MovementComponent With {
-            .speed = 100.0F
+            .velocity = New PointF(0F, 0F),
+            .acceleration = New PointF(0F, 0F)
         })
 
         Renders.AddComponent(enemy, New RenderComponent With {
             .size = 16,
             .brush = Brushes.Red
         })
+        Enemies.AddComponent(enemy, New EnemyComponent())
     End Sub
 
-    Public Sub CreateBullet(pos As PointF)
+    Public Sub CreateBullet(pos As PointF, pos2 As PointF)
         Dim bullet = EntityManager.CreateEntity()
+
+        Dim velocity = New PointF(0.0F, 0.0F)
+        Dim acceleration = New PointF(10.0F, 10.0F)
 
         Transforms.AddComponent(bullet, New TransformComponent With {
             .pos = pos
         })
         Movements.AddComponent(bullet, New MovementComponent With {
-            .speed = 100.0F,
-            .velocity = New PointF(1, 1),
-            .acceleration = New PointF(0, 0)
+            .velocity = velocity,
+            .acceleration = acceleration
         })
         Renders.AddComponent(bullet, New RenderComponent With {
-           .size = 16,
+           .size = 8,
            .brush = Brushes.Red
        })
     End Sub
