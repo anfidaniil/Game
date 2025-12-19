@@ -2,13 +2,17 @@
     Implements ISystem
     Public Sub Update(world As World, dt As Single) Implements ISystem.Update
         For Each kv In world.CollisionEvents
+            If world.Enemies.HasComponent(kv.entityB) And world.Enemies.HasComponent(kv.entityA) Then
+                Continue For
+            End If
             If world.Damages.HasComponent(kv.entityA) And world.Healths.HasComponent(kv.entityB) Then
                 Dim hc = world.Healths.GetComponent(kv.entityB)
                 Dim dc = world.Damages.GetComponent(kv.entityA)
 
+
                 If world.IFrames.HasComponent(kv.entityB) Then
                     Debug.WriteLine("Entity is invincible")
-                    Return
+                    Continue For
                 End If
 
                 hc.health = hc.health - dc.damage

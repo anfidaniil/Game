@@ -7,14 +7,27 @@
         Me.world = New World(g, input, Me)
         Me.g = g
         Me.gameState = GameState.Playing
+        CreateTestWorld()
+    End Sub
+
+    Public Sub CreateTestWorld()
         world.CreatePlayer()
-        world.CreateEnemy()
-        world.CreateStain(New PointF(0, 100))
+        CreateEnemiesAroundPoint(0, 0, 2)
+        CreateEnemiesAroundPoint(400, 0, 2)
     End Sub
 
     Public Sub GameOver()
         Debug.WriteLine("GameOver")
         gameState = GameState.GameOver
+    End Sub
+
+    Public Sub CreateEnemiesAroundPoint(posX As Integer, posY As Integer, numEnemies As Integer)
+        For i = 1 To numEnemies
+            world.CreateEnemy(New PointF(
+                posX + Random.Shared.Next(-10, 10),
+                posY + Random.Shared.Next(-10, 10)
+            ))
+        Next
     End Sub
 
     Public Sub Update(dt As Single)
@@ -32,7 +45,7 @@
             Case GameState.Playing
                 world.Draw()
             Case GameState.GameOver
-                g.Clear(Color.Red)
+                g.Clear(Color.Beige)
         End Select
     End Sub
 End Class
