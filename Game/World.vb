@@ -1,6 +1,8 @@
 ﻿Imports System.Numerics
 
 Public Class World
+    Public game As Game
+
     Public EntityManager As New EntityManager()
 
     Public Transforms As New ComponentStore(Of TransformComponent)
@@ -23,15 +25,20 @@ Public Class World
     Public Const MAX_ACCELERATION = 1000.0F
     Public Const MAX_VELOCITY = 200.0F
     Public Const IFRAMES_DURATION = 0.1F
+    Public DEFAULT_POSITION = New PointF(0, 0)
 
-    Public Sub New(g As Graphics, input As InputState)
+    Public Sub New(g As Graphics, input As InputState, game As Game)
+        Me.game = game
         Systems.Add(New PlayerMovementSystem(input))
         Systems.Add(New EnemyMovementSystem())
         Systems.Add(New MovementSystem())
-        Systems.Add(New InvincibilitySystem)
+
+        Systems.Add(New InvincibilitySystem())
+
         Systems.Add(New CollisionSystem())
-        Systems.Add(New CollisionHandling())
         Systems.Add(New DamageSystem())
+        Systems.Add(New CollisionResolutionSystem())
+
         Systems.Add(New RenderSystem(g))
     End Sub
 
@@ -69,16 +76,20 @@ Public Class World
         Colliders.AddComponent(player, New BoxCollider With {
             .size = 16
         })
+        Healths.AddComponent(player, New Health With {
+            .health = 50
+        })
         Damages.AddComponent(player, New DamageComponent With {
                              .damage = 1})
         Players.AddComponent(player, New PlayerComponent())
     End Sub
 
-    Public Sub CreateEnemy()
+    Public Sub CreateEnemy(pos As PointF)
         Dim enemy = EntityManager.CreateEntity()
 
+
         Transforms.AddComponent(enemy, New TransformComponent With {
-            .pos = New PointF(0, 0)
+            .pos = pos
         })
 
         Movements.AddComponent(enemy, New MovementComponent With {
@@ -97,6 +108,8 @@ Public Class World
         Healths.AddComponent(enemy, New Health With {
             .health = 100
         })
+        Damages.AddComponent(enemy, New DamageComponent With {
+                             .damage = 1})
 
         Enemies.AddComponent(enemy, New EnemyComponent())
     End Sub
@@ -131,9 +144,16 @@ Public Class World
 
             ' Remove entity itself
             EntityManager.RemoveEntity(e)
+            If (e = PlayerID) Then
+                OnPlayerDestruction()
+            End If
             Debug.WriteLine("Destroyed entity: " & e)
         Next
 
         EntityDestructionEvents.Clear()
+    End Sub
+
+    Private Sub OnPlayerDestruction()
+        game.GameOver()
     End Sub
 End Class

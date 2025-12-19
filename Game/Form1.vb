@@ -1,14 +1,11 @@
 ﻿Public Class Form1
     Private input As InputState
-    Private world As World
+    Private game As Game
     Private lastTime As DateTime
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.KeyPreview = True
         input = New InputState(False, False, False, False)
-        world = New World(Me.CreateGraphics(), input)
-        world.CreatePlayer()
-        world.CreateEnemy()
-        world.CreateStain(New PointF(0, 100))
+        game = New Game(Me.CreateGraphics, input)
         lastTime = DateTime.Now
         Timer1.Interval = 10
         Timer1.Start()
@@ -19,9 +16,8 @@
         Dim dt = CSng((now - lastTime).TotalSeconds)
         lastTime = now
 
-        world.Update(dt)
-        world.Draw()
-        world.CollisionEvents.Clear()
+        game.Update(dt)
+        game.Draw()
     End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
