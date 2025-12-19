@@ -2,7 +2,6 @@
 
 Public Class World
     Public game As Game
-
     Public EntityManager As New EntityManager()
 
     Public Transforms As New ComponentStore(Of TransformComponent)
@@ -10,6 +9,7 @@ Public Class World
     Public Colliders As New ComponentStore(Of BoxCollider)
     Public Renders As New ComponentStore(Of RenderComponent)
     Public Players As New ComponentStore(Of PlayerComponent)
+    Public Bullets As New ComponentStore(Of BulletComponent)
     Public Enemies As New ComponentStore(Of EnemyComponent)
     Public Healths As New ComponentStore(Of Health)
     Public Damages As New ComponentStore(Of DamageComponent)
@@ -114,17 +114,27 @@ Public Class World
         Enemies.AddComponent(enemy, New EnemyComponent())
     End Sub
 
-    Public Sub CreateStain(pos As PointF)
+    Public Sub CreateBullet(startPos As PointF, direction As PointF)
         Dim bullet = EntityManager.CreateEntity()
+        Dim norm = NormalisePointFVector(direction)
 
-        Transforms.AddComponent(bullet, New TransformComponent With {
-            .pos = pos
-        })
-        Renders.AddComponent(bullet, New RenderComponent With {
-           .size = 8,
-           .brush = Brushes.Red
-       })
+        Dim initialVelocity = New PointF(norm.X * 400, norm.Y * 400)
+
+        Transforms.AddComponent(bullet, New TransformComponent With {.pos = startPos})
+
+        Movements.AddComponent(bullet, New MovementComponent With {
+        .velocity = initialVelocity,
+        .acceleration = New PointF(0, 0),
+        .damping = 1.5F
+    })
+
+        Renders.AddComponent(bullet, New RenderComponent With {.size = 6, .brush = Brushes.Yellow})
+        Colliders.AddComponent(bullet, New BoxCollider With {.size = 6})
+        Damages.AddComponent(bullet, New DamageComponent With {.damage = 5})
+        Bullets.AddComponent(bullet, New BulletComponent())
     End Sub
+
+
 
     Public Sub DestructEntities()
         If EntityDestructionEvents.Count = 0 Then Return
