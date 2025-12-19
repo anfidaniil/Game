@@ -11,6 +11,7 @@ Public Class World
     Public Enemies As New ComponentStore(Of EnemyComponent)
     Public Healths As New ComponentStore(Of Health)
     Public Damages As New ComponentStore(Of DamageComponent)
+    Public IFrames As New ComponentStore(Of InvincibilityComponent)
 
     Public CollisionEvents As New List(Of CollisionEvent)
     Public EntityDestructionEvents As New List(Of EntityDestructionEvent)
@@ -21,11 +22,13 @@ Public Class World
 
     Public Const MAX_ACCELERATION = 1000.0F
     Public Const MAX_VELOCITY = 200.0F
+    Public Const IFRAMES_DURATION = 0.1F
 
     Public Sub New(g As Graphics, input As InputState)
         Systems.Add(New PlayerMovementSystem(input))
         Systems.Add(New EnemyMovementSystem())
         Systems.Add(New MovementSystem())
+        Systems.Add(New InvincibilitySystem)
         Systems.Add(New CollisionSystem())
         Systems.Add(New CollisionHandling())
         Systems.Add(New DamageSystem())
@@ -92,7 +95,8 @@ Public Class World
             .size = 16
         })
         Healths.AddComponent(enemy, New Health With {
-                             .health = 100})
+            .health = 100
+        })
 
         Enemies.AddComponent(enemy, New EnemyComponent())
     End Sub

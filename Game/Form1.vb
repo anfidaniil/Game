@@ -10,7 +10,7 @@
         world.CreateEnemy()
         world.CreateStain(New PointF(0, 100))
         lastTime = DateTime.Now
-        Timer1.Interval = 20
+        Timer1.Interval = 10
         Timer1.Start()
     End Sub
 
