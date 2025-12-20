@@ -96,7 +96,7 @@ Public Class World
 
         Renders.AddComponent(player, New RenderComponent With {
             .size = 16,
-            .brush = Brushes.White
+            .brush = Brushes.Green
         })
         Colliders.AddComponent(player, New BoxCollider With {
             .size = 16

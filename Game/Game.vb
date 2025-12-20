@@ -10,7 +10,7 @@ Public Class Game
         Me.world = New World(g, input, Me)
         Me.g = g
         Me.gameState = GameState.Playing
-        level = New Bitmap(GameResources.test_Map)
+        level = New Bitmap(New Bitmap(GameResources.test_Map, New Size(256, 256)))
         CreateTestWorld()
     End Sub
 

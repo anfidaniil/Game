@@ -2,10 +2,10 @@
     Implements ISystem
 
     Public Sub Update(world As World, dt As Single) Implements ISystem.Update
-        For Each kv In world.Transforms.All
+        For Each kv In world.Enemies.All
             Dim id = kv.Key
             If world.Movements.HasComponent(id) Then
-                Dim t = kv.Value
+                Dim t = world.Transforms.GetComponent(id)
                 Dim m = world.Movements.GetComponent(id)
 
                 If world.Enemies.HasComponent(id) Then

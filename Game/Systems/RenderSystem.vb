@@ -11,11 +11,13 @@ Public Class RenderSystem
     End Sub
 
     Public Sub Draw(world As World)
-        g.Clear(Color.Black)
+        g.CompositingMode = Drawing2D.CompositingMode.SourceCopy
+        g.CompositingQuality = Drawing2D.CompositingQuality.HighSpeed
         g.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
-        g.PixelOffsetMode = Drawing2D.PixelOffsetMode.Half
         g.SmoothingMode = Drawing2D.SmoothingMode.None
+        g.PixelOffsetMode = Drawing2D.PixelOffsetMode.None
 
+        g.Clear(Color.Black)
 
         Dim cameraID = world.Cameras.All.First().Key
         Dim camera = world.Cameras.GetComponent(cameraID)
@@ -23,6 +25,7 @@ Public Class RenderSystem
 
         Dim camX As Single = CSng(Math.Floor(cameraPos.pos.X))
         Dim camY As Single = CSng(Math.Floor(cameraPos.pos.Y))
+
 
 
         g.TranslateTransform(-camX, -camY)
@@ -34,7 +37,7 @@ Public Class RenderSystem
         ))
 
 
-        g.DrawImage(world.game.level, 0, 0)
+        g.DrawImageUnscaled(world.game.level, 0, 0)
 
         For Each kv In world.Transforms.All
             Dim id = kv.Key
