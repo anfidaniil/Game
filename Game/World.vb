@@ -27,9 +27,9 @@ Public Class World
     Public Const SCREEN_HEIGHT = 480
     Public Const SCREEN_WIDTH = 720
 
-    Public Const MAX_ACCELERATION = 500.0F
-    Public Const MAX_ENEMY_ACCELERATION = 250.0F
-    Public Const MAX_VELOCITY = 150.0F
+    Public Const MAX_ACCELERATION = 1000.0F
+    Public Const MAX_ENEMY_ACCELERATION = 500.0F
+    Public Const MAX_VELOCITY = 200.0F
 
     Public Const IFRAMES_DURATION = 0.1F
     Public DEFAULT_POSITION = New PointF(0, 0)
@@ -37,7 +37,7 @@ Public Class World
     Public Const TILE_SIZE As Integer = 128
 
 
-    Public Sub New(g As Graphics, input As InputState, game As Game)
+    Public Sub New(input As InputState, game As Game)
         Me.game = game
         Systems.Add(New PlayerMovementSystem(input))
         Systems.Add(New CameraFollowSystem())
@@ -51,7 +51,7 @@ Public Class World
         Systems.Add(New CollisionResolutionSystem())
 
 
-        Systems.Add(New RenderSystem(g))
+        Systems.Add(New RenderSystem())
     End Sub
 
     Public Sub Update(dt As Single)
@@ -61,9 +61,9 @@ Public Class World
         DestructEntities()
     End Sub
 
-    Public Sub Draw()
+    Public Sub Draw(g)
         For Each sys In Systems
-            sys.Draw(Me)
+            sys.Draw(Me, g)
         Next
     End Sub
 

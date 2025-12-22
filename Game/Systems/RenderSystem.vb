@@ -4,13 +4,7 @@ Public Class RenderSystem
 
     Implements ISystem
 
-    Private g As Graphics
-
-    Public Sub New(graphics As Graphics)
-        g = graphics
-    End Sub
-
-    Public Sub Draw(world As World)
+    Public Sub Draw(world As World, g As Graphics) Implements ISystem.Draw
         g.CompositingMode = Drawing2D.CompositingMode.SourceOver
         g.CompositingQuality = Drawing2D.CompositingQuality.HighSpeed
         g.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
@@ -81,9 +75,5 @@ Public Class RenderSystem
 
     Public Sub Update(world As World, dt As Single) Implements ISystem.Update
 
-    End Sub
-
-    Private Sub ISystem_Draw(world As World) Implements ISystem.Draw
-        Draw(world)
     End Sub
 End Class

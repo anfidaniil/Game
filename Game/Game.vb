@@ -2,13 +2,11 @@
 
 Public Class Game
     Private world As World
-    Private g As Graphics
     Private gameState As GameState
     Public level As New Dictionary(Of Point, Bitmap)
 
-    Public Sub New(g As Graphics, input As InputState)
-        Me.world = New World(g, input, Me)
-        Me.g = g
+    Public Sub New(input As InputState)
+        Me.world = New World(input, Me)
         Me.gameState = GameState.Playing
         CreateTestWorld()
     End Sub
@@ -74,10 +72,10 @@ Public Class Game
         End Select
     End Sub
 
-    Public Sub Draw()
+    Public Sub Draw(g As Graphics)
         Select Case gameState
             Case GameState.Playing
-                world.Draw()
+                world.Draw(g)
             Case GameState.GameOver
                 g.Clear(Color.Beige)
         End Select
