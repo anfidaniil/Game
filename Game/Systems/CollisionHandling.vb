@@ -5,6 +5,6 @@
 
     End Sub
 
-    Public Sub Draw(world As World) Implements ISystem.Draw
+    Public Sub Draw(world As World, g As Graphics) Implements ISystem.Draw
     End Sub
 End Class

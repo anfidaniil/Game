@@ -5,12 +5,16 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.KeyPreview = True
         input = New InputState(False, False, False, False)
-
-        Dim g = Me.CreateGraphics
-
-        game = New Game(g, input)
+        Me.SetStyle(
+            ControlStyles.AllPaintingInWmPaint Or
+            ControlStyles.UserPaint Or
+            ControlStyles.OptimizedDoubleBuffer,
+            True
+        )
+        Me.UpdateStyles()
+        game = New Game(input)
         lastTime = DateTime.Now
-        Timer1.Interval = 40
+        Timer1.Interval = 10
         Timer1.Start()
     End Sub
 
@@ -20,7 +24,7 @@
         lastTime = now
 
         game.Update(dt)
-        game.Draw()
+        Me.Invalidate()
     End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
@@ -39,5 +43,13 @@
             Case Keys.S, Keys.Down : input.down = False
             Case Keys.D, Keys.Right : input.right = False
         End Select
+    End Sub
+
+    Protected Overrides Sub OnPaint(e As PaintEventArgs)
+        MyBase.OnPaint(e)
+
+        If game IsNot Nothing Then
+            game.Draw(e.Graphics)
+        End If
     End Sub
 End Class

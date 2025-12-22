@@ -23,16 +23,16 @@
 
             If overlapX > 0 AndAlso overlapX < overlapY Then
                 Dim push = overlapX / 2
-                tA.pos = New PointF(posA.X + Math.Sign(dx) * push, posA.Y)
-                tB.pos = New PointF(posB.X - Math.Sign(dx) * push, posB.Y)
+                tA.pos = New PointF(Math.Round(posA.X + Math.Sign(dx) * push), Math.Round(posA.Y))
+                tB.pos = New PointF(Math.Round(posB.X - Math.Sign(dx) * push), Math.Round(posB.Y))
             ElseIf overlapY > 0 Then
                 Dim push = overlapY / 2
-                tA.pos = New PointF(posA.X, posA.Y + Math.Sign(dy) * push)
-                tB.pos = New PointF(posB.X, posB.Y - Math.Sign(dy) * push)
+                tA.pos = New PointF(Math.Round(posA.X), Math.Round(posA.Y + Math.Sign(dy) * push))
+                tB.pos = New PointF(Math.Round(posB.X), Math.Round(posB.Y - Math.Sign(dy) * push))
             End If
         Next
     End Sub
 
-    Public Sub Draw(world As World) Implements ISystem.Draw
+    Public Sub Draw(world As World, g As Graphics) Implements ISystem.Draw
     End Sub
 End Class

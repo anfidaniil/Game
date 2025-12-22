@@ -24,16 +24,20 @@ Public Class World
 
     Public PlayerID As Integer
 
-    Public Const SCREEN_HEIGHT = 720
-    Public Const SCREEN_WIDTH = 1024
+    Public Const SCREEN_HEIGHT = 480
+    Public Const SCREEN_WIDTH = 720
 
     Public Const MAX_ACCELERATION = 1000.0F
     Public Const MAX_ENEMY_ACCELERATION = 500.0F
     Public Const MAX_VELOCITY = 200.0F
+
     Public Const IFRAMES_DURATION = 0.1F
     Public DEFAULT_POSITION = New PointF(0, 0)
 
-    Public Sub New(g As Graphics, input As InputState, game As Game)
+    Public Const TILE_SIZE As Integer = 128
+
+
+    Public Sub New(input As InputState, game As Game)
         Me.game = game
         Systems.Add(New PlayerMovementSystem(input))
         Systems.Add(New CameraFollowSystem())
@@ -47,7 +51,7 @@ Public Class World
         Systems.Add(New CollisionResolutionSystem())
 
 
-        Systems.Add(New RenderSystem(g))
+        Systems.Add(New RenderSystem())
     End Sub
 
     Public Sub Update(dt As Single)
@@ -57,12 +61,10 @@ Public Class World
         DestructEntities()
     End Sub
 
-    Public Sub Draw()
+    Public Sub Draw(g)
         For Each sys In Systems
-            sys.Draw(Me)
+            sys.Draw(Me, g)
         Next
-
-
     End Sub
 
     Public Sub CreateCamera()
@@ -95,11 +97,11 @@ Public Class World
         })
 
         Renders.AddComponent(player, New RenderComponent With {
-            .size = 16,
+            .size = 32,
             .brush = Brushes.Green
         })
         Colliders.AddComponent(player, New BoxCollider With {
-            .size = 16
+            .size = 32
         })
         Healths.AddComponent(player, New Health With {
             .health = 50
@@ -124,11 +126,11 @@ Public Class World
         })
 
         Renders.AddComponent(enemy, New RenderComponent With {
-            .size = 16,
+            .size = 32,
             .brush = Brushes.Red
         })
         Colliders.AddComponent(enemy, New BoxCollider With {
-            .size = 16
+            .size = 32
         })
         Healths.AddComponent(enemy, New Health With {
             .health = 100
@@ -174,7 +176,6 @@ Public Class World
             End If
             Debug.WriteLine("Destroyed entity: " & e)
         Next
-
         EntityDestructionEvents.Clear()
     End Sub
 
