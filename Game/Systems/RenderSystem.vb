@@ -64,8 +64,9 @@ Public Class RenderSystem
                 Dim t = kv.Value
                 Dim r = world.Renders.GetComponent(id)
 
-                Dim screenX = CInt(t.pos.X)
-                Dim screenY = CInt(t.pos.Y)
+                Dim screenX = CInt(t.pos.X - r.size / 2)
+                Dim screenY = CInt(t.pos.Y - r.size / 2)
+
                 g.FillRectangle(r.brush, screenX, screenY, r.size, r.size)
             End If
         Next
