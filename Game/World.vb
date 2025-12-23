@@ -98,12 +98,12 @@ Public Class World
         })
 
         Renders.AddComponent(player, New RenderComponent With {
-            .size = 32,
+            .size = 64,
             .spriteX = 3,
             .spriteY = 0
         })
         Colliders.AddComponent(player, New BoxCollider With {
-            .size = 32
+            .size = 64
         })
         Healths.AddComponent(player, New Health With {
             .health = 50
@@ -128,12 +128,12 @@ Public Class World
         })
 
         Renders.AddComponent(enemy, New RenderComponent With {
-            .size = 32,
+            .size = 64,
             .spriteX = 3,
             .spriteY = 1
         })
         Colliders.AddComponent(enemy, New BoxCollider With {
-            .size = 32
+            .size = 64
         })
         Healths.AddComponent(enemy, New Health With {
             .health = 100
