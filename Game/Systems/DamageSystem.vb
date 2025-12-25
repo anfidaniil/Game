@@ -49,10 +49,10 @@
                             .entityID = ev.entityB
                         }
                     )
-                    If world.Projectiles.HasComponent(ev.entityA) And world.Projectiles.GetComponent(ev.entityA).entityType = 1 Then
-                        Debug.WriteLine("Score Increased")
-                        Dim score = world.Scores.GetComponent(world.PlayerID)
-                        score.score = score.score + 1
+                    If world.Projectiles.HasComponent(ev.entityA) Then
+                        If world.Projectiles.GetComponent(ev.entityA).entityType = 1 Then
+                            world.game.score = world.game.score + 1
+                        End If
                     End If
                 End If
             End If
@@ -74,10 +74,10 @@
                             .entityID = ev.entityA
                         }
                     )
-                    If world.Projectiles.HasComponent(ev.entityB) And world.Projectiles.GetComponent(ev.entityB).entityType = 1 Then
-                        Debug.WriteLine("Score Increased")
-                        Dim score = world.Scores.GetComponent(world.PlayerID)
-                        score.score = score.score + 1
+                    If world.Projectiles.HasComponent(ev.entityB) Then
+                        If world.Projectiles.GetComponent(ev.entityB).entityType = 1 Then
+                            world.game.score = world.game.score + 1
+                        End If
                     End If
                 End If
             End If

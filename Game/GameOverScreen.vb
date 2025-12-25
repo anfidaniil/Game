@@ -29,13 +29,21 @@ Public Class GameOverScreen
         Dim sizeX = Form1.Width \ 2
         Dim sizeY = Form1.Height \ 2
 
-        g.FillRectangle(New SolidBrush(Color.Beige), posX, posY, sizeX, sizeY)
+
+
+        Dim score = world.game.score
+        Using font As New Font("Arial", 24, FontStyle.Bold)
+            Dim text = "Score: " & score
+            Dim size = g.MeasureString(text, font)
+            g.DrawString(text, font, Brushes.White,
+                (Form1.Width - size.Width) / 2, 100)
+        End Using
 
         For Each btn In buttons
             g.FillRectangle(Brushes.DarkGray, btn.bounds)
             g.DrawRectangle(Pens.White, btn.bounds)
 
-            Using font As New Font("Arial", 14, FontStyle.Bold)
+            Using font As New Font("Arial", 16, FontStyle.Bold)
                 Dim size = g.MeasureString(btn.text, font)
                 g.DrawString(btn.text, font, Brushes.White,
                     btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,

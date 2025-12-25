@@ -5,6 +5,7 @@ Public Class Game
     Public gameState As GameState
     Public level As New Dictionary(Of Point, Bitmap)
     Public charSprites As New Bitmap(My.Resources.GameResources.character_sprites, New Size(480 * 2, 160 * 2))
+    Public score As Integer = 0
 
     Public Sub New(input As InputState)
         Me.world = New World(input, Me)

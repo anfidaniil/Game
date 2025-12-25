@@ -23,9 +23,6 @@ Public Class World
     Public Immovables As New ComponentStore(Of ImmovableComponent)
 
     Public Attacks As New ComponentStore(Of AttackComponent)
-    Public Scores As New ComponentStore(Of ScoreComponent)
-
-
 
     Public CollisionEvents As New List(Of CollisionEvent)
     Public EntityDestructionEvents As New List(Of EntityDestructionEvent)
@@ -127,10 +124,6 @@ Public Class World
             .attack = False,
             .attackCooldown = 0.1F,
             .timeRemaining = 1.0F
-        })
-
-        Scores.AddComponent(player, New ScoreComponent With {
-            .score = 0
         })
     End Sub
 
