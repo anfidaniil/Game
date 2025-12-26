@@ -10,6 +10,9 @@ Public Class Game
     Public level As New Dictionary(Of Point, Bitmap)
 
     Dim tileMap As Bitmap = My.Resources.GameResources.tiles
+
+    Public level1 As New Bitmap(My.Resources.GameResources.level1_map, New Size(2048, 2048))
+    Public wallPositions As New List(Of Point)
     Public charSprites As New Bitmap(My.Resources.GameResources.character_sprites, New Size(480 * 2, 160 * 2))
     Public score As Integer = 0
 
@@ -23,12 +26,12 @@ Public Class Game
         CreateLevel()
         world.CreatePlayer()
         world.CreateCamera()
-        CreateEnemiesAroundPoint(128, 128, 4)
-        CreateEnemiesAroundPoint(400, 128, 4)
+        'CreateEnemiesAroundPoint(128, 128, 4)
+        'CreateEnemiesAroundPoint(400, 128, 4)
     End Sub
 
-    Public Sub CreateMapCollisionBox(pos As PointF)
-        world.CreateImmovableWall(pos)
+    Public Sub CreateMapCollisionBox(pos As PointF, size As Integer)
+        world.CreateImmovableWall(pos, size)
     End Sub
 
     Public Sub GameOver()
@@ -95,6 +98,23 @@ Public Class Game
 
     End Function
 
+    Private Function GetTileFromPosition(x As Integer, y As Integer) As Bitmap
+        Dim sprite As New Rectangle(128 * x, 128 * y, 128, 128)
+        Dim tileSize As Integer = 256
+
+        Dim tile As New Bitmap(tileSize, tileSize, Imaging.PixelFormat.Format32bppArgb)
+
+        Using g As Graphics = Graphics.FromImage(tile)
+            g.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
+            g.PixelOffsetMode = Drawing2D.PixelOffsetMode.Half
+
+            g.DrawImage(level1, New Rectangle(0, 0, tileSize, tileSize), sprite, GraphicsUnit.Pixel)
+        End Using
+
+        Return tile
+
+    End Function
+
     Private Function Create128TileFromSprites(
         pos As Point,
         sprite1 As Bitmap,
@@ -119,47 +139,43 @@ Public Class Game
         Return tile128
     End Function
     Public Sub CreateLevel()
-        Dim sprite1 = GetSpriteFromPosition(0, 3)
-        Dim sprite2 = GetSpriteFromPosition(0, 3)
-        Dim sprite3 = GetSpriteFromPosition(0, 3)
-        Dim sprite4 = GetSpriteFromPosition(4, 3)
-        Dim result = Create128TileFromSprites(
-            New Point(0, 0),
-            sprite1,
-            sprite2,
-            sprite3,
-            sprite4
-        )
+        For i = 0 To 15
+            For j = 0 To 15
+                If i = 0 And j > 3 And j < 13 Then
+                    CreateMapCollisionBox(New PointF(World.TILE_SIZE + 128, j * World.TILE_SIZE), World.TILE_SIZE)
+                End If
+                If i = 15 And j > 3 And j < 13 Then
+                    CreateMapCollisionBox(New PointF(World.TILE_SIZE * i - World.TILE_SIZE / 2, j * World.TILE_SIZE), World.TILE_SIZE)
+                End If
+                If j = 0 And i > 3 And i < 13 Then
+                    CreateMapCollisionBox(New PointF(i * World.TILE_SIZE, World.TILE_SIZE + 128), World.TILE_SIZE)
+                End If
+                If j = 15 And i > 3 And i < 13 Then
+                    CreateMapCollisionBox(New PointF(World.TILE_SIZE * i, World.TILE_SIZE * j - World.TILE_SIZE / 2), World.TILE_SIZE)
+                End If
 
-        CreateMapCollisionBox(New PointF(+World.TILE_SIZE / 2, +World.TILE_SIZE / 2))
-        CreateMapCollisionBox(New PointF(+World.TILE_SIZE / 2 + World.TILE_SIZE * 10, +World.TILE_SIZE / 2))
-        For y = 0 To 0
-            For x = 1 To 9
-                level(New Point(x, y)) = result
-                CreateMapCollisionBox(New PointF(World.TILE_SIZE / 2 + World.TILE_SIZE * x, -World.TILE_SIZE / 2))
+                level(New Point(i, j)) = GetTileFromPosition(i, j)
             Next
+            'Left-Upper Corner
+            CreateMapCollisionBox(New Point(576, 960), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(704, 832), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(832, 704), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(960, 576), World.TILE_SIZE / 2)
+            'Right-Upper Corner
+            CreateMapCollisionBox(New Point(3520, 960), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(3392, 832), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(3264, 704), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(3136, 576), World.TILE_SIZE / 2)
+            'Left-Down Corner
+            CreateMapCollisionBox(New Point(960, 3520), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(832, 3392), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(704, 3264), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(576, 3136), World.TILE_SIZE / 2)
+            'Right-Down Corner
+            CreateMapCollisionBox(New Point(3136, 3520), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(3264, 3392), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(3392, 3264), World.TILE_SIZE / 2)
+            CreateMapCollisionBox(New Point(3520, 3136), World.TILE_SIZE / 2)
         Next
-        For y = 1 To 3
-            For x = 0 To 10
-                level(New Point(x, y)) = result
-            Next
-            CreateMapCollisionBox(New PointF(-World.TILE_SIZE / 2, World.TILE_SIZE / 2 + World.TILE_SIZE * y))
-            CreateMapCollisionBox(New PointF(+World.TILE_SIZE / 2 + World.TILE_SIZE * 11, World.TILE_SIZE / 2 + World.TILE_SIZE * y))
-        Next
-        For y = 4 To 9
-            For x = 0 To 10
-                level(New Point(x, y)) = result
-            Next
-            CreateMapCollisionBox(New PointF(-World.TILE_SIZE / 2, World.TILE_SIZE / 2 + World.TILE_SIZE * y))
-            CreateMapCollisionBox(New PointF(+World.TILE_SIZE / 2 + World.TILE_SIZE * 11, World.TILE_SIZE / 2 + World.TILE_SIZE * y))
-        Next
-        For y = 10 To 10
-            For x = 1 To 9
-                level(New Point(x, y)) = result
-                CreateMapCollisionBox(New PointF(World.TILE_SIZE / 2 + World.TILE_SIZE * x, World.TILE_SIZE / 2 + World.TILE_SIZE * (y + 1)))
-            Next
-        Next
-        CreateMapCollisionBox(New PointF(+World.TILE_SIZE / 2, World.TILE_SIZE / 2 + World.TILE_SIZE * 10))
-        CreateMapCollisionBox(New PointF(+World.TILE_SIZE / 2 + World.TILE_SIZE * 10, World.TILE_SIZE / 2 + World.TILE_SIZE * 10))
     End Sub
 End Class
