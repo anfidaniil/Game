@@ -29,7 +29,7 @@
         Me.UpdateStyles()
         game = New Game(input)
         lastTime = DateTime.Now
-        Timer1.Interval = 1
+        Timer1.Interval = 100
         Timer1.Start()
     End Sub
 
@@ -46,9 +46,8 @@
         While accumulator >= FIXED_DT
             game.Update(CSng(FIXED_DT))
             accumulator -= FIXED_DT
-            Me.Invalidate()
         End While
-
+        Me.Invalidate()
     End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
