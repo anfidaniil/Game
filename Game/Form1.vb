@@ -8,7 +8,7 @@
     Private fps As Integer = 0
     Private lastCheck As Date
     Private accumulator As Double = 0
-    Private Const FIXED_DT As Double = 0.01 ' 50 Hz
+    Private Const FIXED_DT As Double = 0.01 ' 100 Hz
 
 
     Public Sub CalculateFPS()
@@ -29,7 +29,7 @@
         Me.UpdateStyles()
         game = New Game(input)
         lastTime = DateTime.Now
-        Timer1.Interval = 100
+        Timer1.Interval = 10
         Timer1.Start()
     End Sub
 
@@ -57,6 +57,16 @@
             Case Keys.S, Keys.Down : input.down = True
             Case Keys.D, Keys.Right : input.right = True
             Case Keys.Space : input.fire = True
+
+            Case Keys.E
+                If game.gameState = GameState.GameOver Then
+                    Return
+                End If
+                If game.gameState = GameState.Playing Then
+                    game.gameState = GameState.Menu
+                ElseIf game.gameState = GameState.Menu Then
+                    game.gameState = GameState.Playing
+                End If
         End Select
     End Sub
 
@@ -77,6 +87,9 @@
 
         If game.gameState = GameState.GameOver Then
             game.gameOverUI.HandleMouseClick(e.Location)
+        End If
+        If game.gameState = GameState.Menu Then
+            game.menuScreen.HandleMouseClick(e.Location)
         End If
     End Sub
 

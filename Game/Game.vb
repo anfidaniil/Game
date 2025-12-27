@@ -5,6 +5,7 @@ Imports System.Security.Policy
 Public Class Game
     Public world As World
     Public gameOverUI As GameOverScreen
+    Public menuScreen As MenuScreen
     Public gameState As GameState
 
     Public level As New Dictionary(Of Point, Bitmap)
@@ -18,8 +19,16 @@ Public Class Game
 
     Public Sub New(input As InputState)
         Me.world = New World(input, Me)
-        Me.gameState = GameState.Playing
         CreateTestWorld()
+        Me.gameState = GameState.Menu
+        menuScreen = New MenuScreen(
+            Form1.Width,
+            Form1.Height,
+            Sub() StartNewGame(),
+            Sub() Form1.Close(),
+            Sub() gameState = GameState.Playing
+        )
+
     End Sub
 
     Public Sub CreateTestWorld()
@@ -28,6 +37,7 @@ Public Class Game
         world.CreateCamera()
         CreateEnemiesAroundPoint(1600, 1600, 4)
         CreateEnemiesAroundPoint(800, 800, 4)
+        world.Update(0.01)
     End Sub
 
     Public Sub CreateMapCollisionBox(pos As PointF, size As Integer)
@@ -40,15 +50,17 @@ Public Class Game
         gameOverUI = New GameOverScreen(
             Form1.Width,
             Form1.Height,
-            Sub() RestartGame(),
+            Sub() StartNewGame(),
             Sub() Form1.Close()
         )
     End Sub
 
-    Public Sub RestartGame()
+    Public Sub StartNewGame()
         Me.world = New World(Form1.input, Me)
         Me.gameState = GameState.Playing
+        Me.score = 0
         CreateTestWorld()
+        Debug.WriteLine("Starting New Game")
     End Sub
 
     Public Sub CreateEnemiesAroundPoint(posX As Integer, posY As Integer, numEnemies As Integer)
@@ -62,6 +74,8 @@ Public Class Game
 
     Public Sub Update(dt As Single)
         Select Case gameState
+            Case GameState.Menu
+
             Case GameState.Playing
                 world.Update(dt)
                 world.CollisionEvents.Clear()
@@ -72,6 +86,9 @@ Public Class Game
 
     Public Sub Draw(g As Graphics)
         Select Case gameState
+            Case GameState.Menu
+                world.Draw(g)
+                menuScreen.Draw(g, world)
             Case GameState.Playing
                 world.Draw(g)
             Case GameState.GameOver
@@ -139,6 +156,10 @@ Public Class Game
         Return tile128
     End Function
     Public Sub CreateLevel()
+        If level.Count > 0 Then
+            Debug.WriteLine("Level already created")
+            Return
+        End If
         For i = 0 To 15
             For j = 0 To 15
                 If i = 0 And j > 3 And j < 13 Then

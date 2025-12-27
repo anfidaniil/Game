@@ -1,22 +1,26 @@
-﻿Imports System.Drawing.Design
-Imports System.Drawing.Imaging
-
-Public Class GameOverScreen
+﻿Public Class MenuScreen
     Public buttons As New List(Of UIButton)
     Dim buttonWidth = 200
     Dim buttonHeight = 50
 
-    Public Sub New(screenWidth As Integer, screenHeight As Integer, restart As Action, quit As Action)
-        Dim centerX = screenWidth \ 2 - buttonWidth
+    Public Sub New(screenWidth As Integer, screenHeight As Integer, restart As Action, quit As Action, continueAction As Action)
+        Dim centerX = (screenWidth - buttonWidth) \ 2
         Dim centerY = screenHeight \ 2
 
         buttons.Add(New UIButton With {
-            .bounds = New Rectangle(centerX - 80, centerY, buttonWidth, buttonHeight),
-            .text = "Restart",
+            .bounds = New Rectangle(centerX - buttonWidth / 2 - 20, centerY, buttonWidth, buttonHeight),
+            .text = "Continue",
+            .onClick = continueAction
+        })
+
+        buttons.Add(New UIButton With {
+            .bounds = New Rectangle(centerX + buttonWidth / 2 + 20, centerY, buttonWidth, buttonHeight),
+            .text = "Start New Game",
             .onClick = restart
         })
+
         buttons.Add(New UIButton With {
-            .bounds = New Rectangle(centerX + buttonWidth + 80, centerY, buttonWidth, buttonHeight),
+            .bounds = New Rectangle(centerX, centerY + 90, buttonWidth, buttonHeight),
             .text = "Quit",
             .onClick = quit
         })
@@ -33,9 +37,8 @@ Public Class GameOverScreen
         )
         End Using
 
-        Dim score = world.game.score
         Using font As New Font("Arial", 24, FontStyle.Bold)
-            Dim text = "Score: " & score
+            Dim text = "GAME NAME"
             Dim size = g.MeasureString(text, font)
             g.DrawString(text, font, Brushes.White,
                 (Form1.Width - size.Width) / 2, 100)
@@ -61,5 +64,4 @@ Public Class GameOverScreen
             End If
         Next
     End Sub
-
 End Class
