@@ -7,6 +7,9 @@
     Private count As Integer = 0
     Private fps As Integer = 0
     Private lastCheck As Date
+    Private accumulator As Double = 0
+    Private Const FIXED_DT As Double = 0.01 ' 50 Hz
+
 
     Public Sub CalculateFPS()
         fps = count
@@ -26,17 +29,24 @@
         Me.UpdateStyles()
         game = New Game(input)
         lastTime = DateTime.Now
-        Timer1.Interval = 10
+        Timer1.Interval = 100
         Timer1.Start()
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Dim now = DateTime.Now
-        Dim dt = (now - lastTime).TotalSeconds
-        dt = Math.Min(dt, 0.05F)
+        Dim frameTime = (now - lastTime).TotalSeconds
         lastTime = now
 
-        game.Update(dt)
+        ' Prevent spiral of death
+        If frameTime > 0.1 Then frameTime = 0.1
+
+        accumulator += frameTime
+
+        While accumulator >= FIXED_DT
+            game.Update(CSng(FIXED_DT))
+            accumulator -= FIXED_DT
+        End While
         Me.Invalidate()
     End Sub
 

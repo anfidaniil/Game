@@ -233,7 +233,7 @@ Public Class World
             If (e = PlayerID) Then
                 OnPlayerDestruction()
             End If
-            Debug.WriteLine("Destroyed entity: " & e)
+            'Debug.WriteLine("Destroyed entity: " & e)
         Next
         EntityDestructionEvents.Clear()
     End Sub
