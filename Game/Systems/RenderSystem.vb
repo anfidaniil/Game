@@ -78,16 +78,15 @@ Public Class RenderSystem
             End If
         Next
 
+        g.ResetClip()
+        g.ResetTransform()
+
         Dim score = world.game.score
         Using font As New Font("Arial", 16, FontStyle.Bold)
             Dim text = "Score: " & score
             Dim size = g.MeasureString(text, font)
-            g.DrawString(text, font, Brushes.Black,
-                    0, 0)
+            g.DrawString(text, font, Brushes.Gray, (Form1.Width - size.Width) - 40, 20)
         End Using
-
-        g.ResetClip()
-        g.ResetTransform()
     End Sub
 
     Public Sub Update(world As World, dt As Single) Implements ISystem.Update

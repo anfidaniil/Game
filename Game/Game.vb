@@ -58,6 +58,7 @@ Public Class Game
     Public Sub StartNewGame()
         Me.world = New World(Form1.input, Me)
         Me.gameState = GameState.Playing
+        Me.score = 0
         CreateTestWorld()
         Debug.WriteLine("Starting New Game")
     End Sub
