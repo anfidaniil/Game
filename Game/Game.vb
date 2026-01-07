@@ -38,6 +38,20 @@ Public Class Game
 
     End Sub
 
+    Public Sub ChangeCameraView()
+        Dim id = world.Cameras.All.First.Key
+        Dim cam = world.Cameras.GetComponent(id)
+        cam.viewHeight = Form1.Height
+        cam.viewWidth = Form1.Width
+
+        startingMenuScreen = New StartScreen(
+            Form1.Width,
+            Form1.Height,
+            Sub() StartNewGame(),
+            Sub() Form1.Close()
+        )
+    End Sub
+
     Public Sub CreateTestWorld()
         CreateLevel()
         world.CreatePlayer()

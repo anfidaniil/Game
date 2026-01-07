@@ -21,18 +21,18 @@
     End Sub
 
     Public Sub Draw(g As Graphics, world As World)
-        'Using overlayBrush As New SolidBrush(Color.FromArgb(150, 0, 0, 0))
-        '    g.FillRectangle(
-        '    overlayBrush,
-        '    0,
-        '    0,
-        '    Form1.Width,
-        '    Form1.Height
-        ')
-        'End Using
+        Using overlayBrush As New SolidBrush(Color.FromArgb(255, 0, 0, 0))
+            g.FillRectangle(
+            overlayBrush,
+            0,
+            0,
+            Form1.Width,
+            Form1.Height
+        )
+        End Using
         g.DrawImageUnscaled(My.Resources.GameResources.redcart, New Point(
             (Form1.Width - 720) / 2,
-            (Form1.Height - 560) / 2
+            (Form1.Height - 480) / 2
         ))
 
         Using font As New Font("Arial", 24, FontStyle.Bold)
