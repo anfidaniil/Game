@@ -17,6 +17,13 @@
         Debug.WriteLine("FPS: " & fps)
     End Sub
 
+    Private Sub OnSize_Changed(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
+        If Not game Is Nothing Then
+            game.ChangeCameraView()
+        End If
+    End Sub
+
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.KeyPreview = True
         input = New InputState(False, False, False, False, False, New Point(0, 0))
@@ -90,6 +97,9 @@
         End If
         If game.gameState = GameState.Menu Then
             game.menuScreen.HandleMouseClick(e.Location)
+        End If
+        If game.gameState = GameState.Starting Then
+            game.startingMenuScreen.HandleMouseClick(e.Location)
         End If
     End Sub
 

@@ -36,7 +36,7 @@ Partial Class Form1
         ClientSize = New Size(1264, 681)
         Name = "Form1"
         StartPosition = FormStartPosition.CenterScreen
-        Text = "Form1"
+        Text = "Game"
         ResumeLayout(False)
     End Sub
 
