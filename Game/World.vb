@@ -47,6 +47,7 @@ Public Class World
     Public Sub New(input As InputState, game As Game)
         Me.game = game
 
+        Systems.Add(New WaveSystem())
         Systems.Add(New PlayerMovementSystem(input))
         Systems.Add(New CameraFollowSystem())
         Systems.Add(New EnemyMovementSystem())

@@ -35,9 +35,6 @@ Public Class Game
         CreateLevel()
         world.CreatePlayer()
         world.CreateCamera()
-        CreateEnemiesAroundPoint(1600, 1600, 4)
-        CreateEnemiesAroundPoint(800, 800, 4)
-        world.Update(0.01)
     End Sub
 
     Public Sub CreateMapCollisionBox(pos As PointF, size As Integer)
@@ -66,8 +63,8 @@ Public Class Game
     Public Sub CreateEnemiesAroundPoint(posX As Integer, posY As Integer, numEnemies As Integer)
         For i = 1 To numEnemies
             world.CreateEnemy(New PointF(
-                posX + Random.Shared.Next(-64, 64),
-                posY + Random.Shared.Next(-64, 64)
+                posX + Random.Shared.Next(-10, 10),
+                posY + Random.Shared.Next(-10, 10)
             ))
         Next
     End Sub
