@@ -9,13 +9,13 @@ Public Class StartScreen
         Dim centerX = (screenWidth - buttonWidth) \ 2
         Dim centerY = screenHeight \ 2
 
-        buttons.Add(New UIButton With {
+        buttons.Add(New UIButtonStartNewGame With {
             .bounds = New Rectangle(centerX - buttonWidth / 2 - 20, centerY, buttonWidth, buttonHeight),
             .text = "Start New Game",
             .onClick = restart
         })
 
-        buttons.Add(New UIButton With {
+        buttons.Add(New UIButtonQuit With {
             .bounds = New Rectangle(centerX + buttonWidth / 2 + 20, centerY, buttonWidth, buttonHeight),
             .text = "Quit",
             .onClick = quit
@@ -53,15 +53,22 @@ Public Class StartScreen
         End Using
 
         For Each btn In buttons
-            g.FillRectangle(Brushes.DarkGray, btn.bounds)
-            g.DrawRectangle(Pens.White, btn.bounds)
 
-            Using font As New Font("Arial", 16, FontStyle.Bold)
-                Dim size = g.MeasureString(btn.text, font)
-                g.DrawString(btn.text, font, Brushes.White,
-                    btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,
-                    btn.bounds.Y + (btn.bounds.Height - size.Height) \ 2)
-            End Using
+            If (btn.sprite IsNot Nothing) Then
+                g.DrawImage(btn.sprite, btn.bounds)
+            Else
+                g.FillRectangle(Brushes.DarkGray, btn.bounds)
+                g.DrawRectangle(Pens.White, btn.bounds)
+
+                Using font As New Font("Arial", 16, FontStyle.Bold)
+                    Dim size = g.MeasureString(btn.text, font)
+                    g.DrawString(btn.text, font, Brushes.White,
+                        btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,
+                        btn.bounds.Y + (btn.bounds.Height - size.Height) \ 2)
+                End Using
+            End If
+
+
         Next
     End Sub
 

@@ -43,6 +43,14 @@ Public Class Game
         cam.viewHeight = Form1.Height
         cam.viewWidth = Form1.Width
 
+        menuScreen = New MenuScreen(
+            Form1.Width,
+            Form1.Height,
+            Sub() StartNewGame(),
+            Sub() Form1.Close(),
+            Sub() gameState = GameState.Playing
+        )
+
         startingMenuScreen = New StartScreen(
             Form1.Width,
             Form1.Height,
