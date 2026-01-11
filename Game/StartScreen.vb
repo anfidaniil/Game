@@ -25,7 +25,7 @@ Public Class StartScreen
     Public Sub Draw(g As Graphics, world As World)
         g.Clear(Color.Black)
 
-        Dim imgRatio As Single = 1920 / 1080
+        Dim imgRatio As Single = world.game.bgc.Width / world.game.bgc.Height
         Dim formRatio As Single = Form1.Width / Form1.Height
 
         Dim drawW As Integer
