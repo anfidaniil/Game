@@ -10,6 +10,7 @@ Public Class Game
     Public gameState As GameState
 
     Public level As New Dictionary(Of Point, Bitmap)
+    Public bgc As New Bitmap(My.Resources.GameResources.MAINmenu)
 
     Public level1 As New Bitmap(My.Resources.GameResources.level1_map)
     Public wallPositions As New List(Of Point)

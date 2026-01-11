@@ -1,4 +1,6 @@
-﻿Public Class StartScreen
+﻿Imports Windows.Win32.UI.Input
+
+Public Class StartScreen
     Public buttons As New List(Of UIButton)
     Dim buttonWidth = 200
     Dim buttonHeight = 50
@@ -21,18 +23,30 @@
     End Sub
 
     Public Sub Draw(g As Graphics, world As World)
-        Using overlayBrush As New SolidBrush(Color.FromArgb(255, 0, 0, 0))
-            g.FillRectangle(
-            overlayBrush,
-            0,
-            0,
-            Form1.Width,
-            Form1.Height
-        )
-        End Using
+        g.Clear(Color.Black)
+
+        Dim imgRatio As Single = 1920 / 1080
+        Dim formRatio As Single = Form1.Width / Form1.Height
+
+        Dim drawW As Integer
+        Dim drawH As Integer
+
+        If formRatio > imgRatio Then
+            drawH = Form1.Height
+            drawW = CInt(Form1.Height * imgRatio)
+        Else
+            drawW = Form1.Width
+            drawH = CInt(Form1.Width / imgRatio)
+        End If
+
+        ' Center the image
+        Dim x As Integer = (Form1.Width - drawW) \ 2
+        Dim y As Integer = (Form1.Height - drawH) \ 2
+
+        g.DrawImage(world.game.bgc, x, y, drawW, drawH)
 
         Using font As New Font("Arial", 24, FontStyle.Bold)
-            Dim text = world.GAME_NAME
+            Dim text = World.GAME_NAME
             Dim size = g.MeasureString(text, font)
             g.DrawString(text, font, Brushes.White,
                 (Form1.Width - size.Width) / 2, 100)
