@@ -7,16 +7,17 @@ Public Class GameOverScreen
     Dim buttonHeight = 50
 
     Public Sub New(screenWidth As Integer, screenHeight As Integer, restart As Action, quit As Action)
-        Dim centerX = screenWidth \ 2 - buttonWidth
+        Dim centerX = (screenWidth - buttonWidth) \ 2
         Dim centerY = screenHeight \ 2
 
-        buttons.Add(New UIButton With {
-            .bounds = New Rectangle(centerX - 80, centerY, buttonWidth, buttonHeight),
-            .text = "Restart",
+        buttons.Add(New UIButtonStartNewGame With {
+            .bounds = New Rectangle(centerX - buttonWidth / 2 - 20, centerY, buttonWidth, buttonHeight),
+            .text = "Start New Game",
             .onClick = restart
         })
-        buttons.Add(New UIButton With {
-            .bounds = New Rectangle(centerX + buttonWidth + 80, centerY, buttonWidth, buttonHeight),
+
+        buttons.Add(New UIButtonQuit With {
+            .bounds = New Rectangle(centerX + buttonWidth / 2 + 20, centerY, buttonWidth, buttonHeight),
             .text = "Quit",
             .onClick = quit
         })
@@ -42,15 +43,19 @@ Public Class GameOverScreen
         End Using
 
         For Each btn In buttons
-            g.FillRectangle(Brushes.DarkGray, btn.bounds)
-            g.DrawRectangle(Pens.White, btn.bounds)
+            If (btn.sprite IsNot Nothing) Then
+                g.DrawImage(btn.sprite, btn.bounds)
+            Else
+                g.FillRectangle(Brushes.DarkGray, btn.bounds)
+                g.DrawRectangle(Pens.White, btn.bounds)
 
-            Using font As New Font("Arial", 16, FontStyle.Bold)
-                Dim size = g.MeasureString(btn.text, font)
-                g.DrawString(btn.text, font, Brushes.White,
-                    btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,
-                    btn.bounds.Y + (btn.bounds.Height - size.Height) \ 2)
-            End Using
+                Using font As New Font("Arial", 16, FontStyle.Bold)
+                    Dim size = g.MeasureString(btn.text, font)
+                    g.DrawString(btn.text, font, Brushes.White,
+                        btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,
+                        btn.bounds.Y + (btn.bounds.Height - size.Height) \ 2)
+                End Using
+            End If
         Next
     End Sub
 
