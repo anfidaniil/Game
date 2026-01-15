@@ -35,7 +35,8 @@ Public Class WaveSystem
         End If
 
         If isWaveActive Then
-            Dim targetEnemies = 8 + (roundNumber - 1)
+            Dim calculatedEnemies = 5 + (roundNumber - 1)
+            Dim targetEnemies = Math.Min(calculatedEnemies, 25)
 
             If enemiesSpawnedInThisRound < targetEnemies Then
 
