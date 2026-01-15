@@ -1,6 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Linq
-
+Imports System.Drawing.Drawing2D
 Public Class WaveSystem
     Implements ISystem
 
@@ -35,8 +35,7 @@ Public Class WaveSystem
         End If
 
         If isWaveActive Then
-            Dim calculatedEnemies = 5 + (roundNumber - 1)
-            Dim targetEnemies = Math.Min(calculatedEnemies, 25)
+            Dim targetEnemies = 5 + (roundNumber - 1)
 
             If enemiesSpawnedInThisRound < targetEnemies Then
 
@@ -62,19 +61,26 @@ Public Class WaveSystem
     End Sub
 
     Private Function GetRandomSpawnPos(playerPos As PointF) As PointF
-        Dim x, y As Single
-        For i As Integer = 1 To 15
-            x = rng.Next(SAFE_MIN, SAFE_MAX)
-            y = rng.Next(SAFE_MIN, SAFE_MAX)
 
-            Dim dx = x - playerPos.X
-            Dim dy = y - playerPos.Y
-            Dim dist = Math.Sqrt(dx * dx + dy * dy)
+        Dim rX As Single = CSng((rng.NextDouble() * 2.0) - 1.0)
+        Dim rY As Single = CSng((rng.NextDouble() * 2.0) - 1.0)
 
-            If dist > 400 Then Exit For
-        Next
+        Dim finalX As Single = (rX * 400) + playerPos.X + (Math.Sign(rX) * 400)
+        Dim finalY As Single = (rY * 400) + playerPos.Y + (Math.Sign(rY) * 400)
 
-        Return New PointF(x, y)
+        If finalX < SAFE_MIN Then
+            finalX = SAFE_MIN + 200
+        ElseIf finalX > SAFE_MAX Then
+            finalX = SAFE_MAX - 200
+        End If
+
+        If finalY < SAFE_MIN Then
+            finalY = SAFE_MIN + 200
+        ElseIf finalY > SAFE_MAX Then
+            finalY = SAFE_MAX - 200
+        End If
+
+        Return New PointF(finalX, finalY)
     End Function
 
     Public Sub Draw(world As World, g As Graphics) Implements ISystem.Draw
@@ -82,7 +88,8 @@ Public Class WaveSystem
             Dim text As String = "RONDA " & roundNumber
             Using font As New Font("Arial", 40, FontStyle.Bold)
                 Dim textSize = g.MeasureString(text, font)
-                Dim oldMatrix = g.Transform
+
+                Dim state = g.Save()
                 g.ResetTransform()
 
                 Dim xPos As Single = CSng((world.SCREEN_WIDTH - textSize.Width) / 2)
@@ -91,7 +98,7 @@ Public Class WaveSystem
                 g.DrawString(text, font, Brushes.Black, xPos + 4, yPos + 4)
                 g.DrawString(text, font, Brushes.White, xPos, yPos)
 
-                g.Transform = oldMatrix
+                g.Restore(state)
             End Using
         End If
     End Sub
