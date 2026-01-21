@@ -95,9 +95,20 @@ Public Class WaveSystem
                 Dim xPos As Single = CSng((world.SCREEN_WIDTH - textSize.Width) / 2)
                 Dim yPos As Single = CSng(world.SCREEN_HEIGHT / 4)
 
-                g.DrawString(text, font, Brushes.Black, xPos + 4, yPos + 4)
-                g.DrawString(text, font, Brushes.White, xPos, yPos)
+                Dim alpha As Integer = 255
+                Dim fadeDuration As Single = 0.5F
+                If textTimer < fadeDuration Then
+                    alpha = CInt((textTimer / fadeDuration) * 255)
+                End If
+                alpha = Math.Max(0, Math.Min(255, alpha))
+                Using shadowBrush As New SolidBrush(Color.FromArgb(alpha, Color.Black))
+                    Using textBrush As New SolidBrush(Color.FromArgb(alpha, Color.White))
 
+                        g.DrawString(text, font, shadowBrush, xPos + 4, yPos + 4)
+                        g.DrawString(text, font, textBrush, xPos, yPos)
+
+                    End Using
+                End Using
                 g.Restore(state)
             End Using
         End If
