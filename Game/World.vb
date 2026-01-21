@@ -5,6 +5,8 @@ Public Class World
 
     Public EntityManager As New EntityManager()
 
+    Public WaveData As New WaveComponent()
+
     Public Transforms As New ComponentStore(Of TransformComponent)
     Public Movements As New ComponentStore(Of MovementComponent)
     Public Colliders As New ComponentStore(Of BoxCollider)
@@ -23,6 +25,7 @@ Public Class World
     Public Immovables As New ComponentStore(Of ImmovableComponent)
 
     Public Attacks As New ComponentStore(Of AttackComponent)
+
 
     Public CollisionEvents As New List(Of CollisionEvent)
     Public CollisionLookupTable As New Dictionary(Of Point, List(Of Integer))
@@ -64,6 +67,7 @@ Public Class World
         Systems.Add(New CollisionResolutionSystem())
 
         Systems.Add(New RenderSystem())
+        Systems.Add(New WaveSystem())
     End Sub
 
     Public Sub Update(dt As Single)
