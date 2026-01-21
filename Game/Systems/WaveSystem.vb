@@ -1,63 +1,94 @@
 ﻿Imports System.Drawing
 Imports System.Linq
 Imports System.Drawing.Drawing2D
+
 Public Class WaveSystem
     Implements ISystem
 
     Private Const SAFE_MIN As Integer = 1300
     Private Const SAFE_MAX As Integer = 2800
 
-    Private roundNumber As Integer = 0
+    Private currentState As WaveState = WaveState.FadingIn
+
+    Private roundNumber As Integer = 1
+    Private targetEnemies As Integer = 5
     Private enemiesSpawnedInThisRound As Integer = 0
-    Private isWaveActive As Boolean = False
     Private rng As New Random()
 
-    Private textTimer As Single = 0
-    Private showTextDuration As Single = 3.0F
-    Private isShowingText As Boolean = False
+    Private opacity As Single = 0
+    Private fadeSpeed As Single = 1.5F
+    Private holdTimer As Single = 0
+    Private holdDuration As Single = 2.0F
+    Private showTextDuration As Single = 2.0F
+
+    Private spawnTimer As Single = 0
+    Private Const SPAWN_DELAY As Single = 0.5F
 
     Public Sub Update(world As World, dt As Single) Implements ISystem.Update
 
-        Dim enemiesAlive = world.Enemies.All.Count
+        Select Case currentState
 
-        If enemiesAlive = 0 AndAlso Not isShowingText AndAlso Not isWaveActive Then
-            StartNextRound()
-        End If
-
-        If isShowingText Then
-            textTimer -= dt
-            If textTimer <= 0 Then
-                isShowingText = False
-                isWaveActive = True
-                enemiesSpawnedInThisRound = 0
-            End If
-            Return
-        End If
-
-        If isWaveActive Then
-            Dim targetEnemies = 5 + (roundNumber - 1)
-
-            If enemiesSpawnedInThisRound < targetEnemies Then
-
-                Dim playerPos As PointF = New PointF(2048, 2048)
-                If world.Players.HasComponent(world.PlayerID) Then
-                    playerPos = world.Transforms.GetComponent(world.PlayerID).pos
+            Case WaveState.FadingIn
+                opacity += fadeSpeed * dt
+                If opacity >= 1.0F Then
+                    opacity = 1.0F
+                    currentState = WaveState.Holding
+                    holdTimer = holdDuration
                 End If
 
-                Dim spawnPos = GetRandomSpawnPos(playerPos)
-                world.CreateEnemy(spawnPos)
+            Case WaveState.Holding
+                holdTimer -= dt
+                If holdTimer <= 0 Then
+                    currentState = WaveState.FadingOut
+                End If
 
-                enemiesSpawnedInThisRound += 1
-            Else
-                isWaveActive = False
-            End If
-        End If
+            Case WaveState.FadingOut
+                opacity -= fadeSpeed * dt
+                If opacity <= 0.0F Then
+                    opacity = 0.0F
+                    currentState = WaveState.Spawning
+                    enemiesSpawnedInThisRound = 0
+                    spawnTimer = 0
+                End If
+
+            Case WaveState.Spawning
+                spawnTimer -= dt
+
+                If spawnTimer <= 0 Then
+                    If enemiesSpawnedInThisRound < targetEnemies Then
+                        If world.Players.HasComponent(world.PlayerID) AndAlso world.Transforms.HasComponent(world.PlayerID) Then
+
+                            Dim playerPos = world.Transforms.GetComponent(world.PlayerID).pos
+                            Dim spawnPos = GetRandomSpawnPos(playerPos)
+                            world.CreateEnemy(spawnPos)
+
+                            enemiesSpawnedInThisRound += 1
+                            spawnTimer = SPAWN_DELAY
+                        Else
+                            Debug.Assert(False, "Tentativa de spawn sem jogador vivo")
+                        End If
+
+                    Else
+                        currentState = WaveState.Playing
+                    End If
+                End If
+
+            Case WaveState.Playing
+                If world.Enemies.All.Count = 0 Then
+                    StartNextRound()
+                End If
+
+        End Select
+
     End Sub
 
     Private Sub StartNextRound()
         roundNumber += 1
-        isShowingText = True
-        textTimer = showTextDuration
+
+        Dim calculatedEnemies = 5 + (roundNumber - 1)
+        targetEnemies = Math.Min(calculatedEnemies, 25)
+
+        currentState = WaveState.FadingIn
     End Sub
 
     Private Function GetRandomSpawnPos(playerPos As PointF) As PointF
@@ -84,8 +115,12 @@ Public Class WaveSystem
     End Function
 
     Public Sub Draw(world As World, g As Graphics) Implements ISystem.Draw
-        If isShowingText Then
+        If currentState = WaveState.FadingIn OrElse
+           currentState = WaveState.Holding OrElse
+           currentState = WaveState.FadingOut Then
+
             Dim text As String = "RONDA " & roundNumber
+
             Using font As New Font("Arial", 40, FontStyle.Bold)
                 Dim textSize = g.MeasureString(text, font)
 
@@ -96,19 +131,22 @@ Public Class WaveSystem
                 Dim yPos As Single = CSng(world.SCREEN_HEIGHT / 4)
 
                 Dim alpha As Integer = 255
-                Dim fadeDuration As Single = 0.5F
-                If textTimer < fadeDuration Then
-                    alpha = CInt((textTimer / fadeDuration) * 255)
+
+                If currentState = WaveState.FadingOut AndAlso opacity < 1.0F Then
+                    alpha = CInt(opacity * 255)
+                ElseIf currentState = WaveState.FadingIn Then
+                    alpha = CInt(opacity * 255)
                 End If
+
                 alpha = Math.Max(0, Math.Min(255, alpha))
+
                 Using shadowBrush As New SolidBrush(Color.FromArgb(alpha, Color.Black))
                     Using textBrush As New SolidBrush(Color.FromArgb(alpha, Color.White))
-
                         g.DrawString(text, font, shadowBrush, xPos + 4, yPos + 4)
                         g.DrawString(text, font, textBrush, xPos, yPos)
-
                     End Using
                 End Using
+
                 g.Restore(state)
             End Using
         End If

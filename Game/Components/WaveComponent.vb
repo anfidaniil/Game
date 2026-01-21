@@ -1,11 +1,5 @@
 ﻿Public Class WaveComponent
-    Public Enum WaveState
-        FadingIn
-        Holding
-        FadingOut
-        Spawning
-        Playing
-    End Enum
+
 
     Public State As WaveState = WaveState.FadingIn
     Public RoundNumber As Integer = 1
