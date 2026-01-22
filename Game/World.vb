@@ -180,6 +180,11 @@ Public Class World
             .attackCooldown = 3.0F,
             .timeRemaining = 3.0F
         })
+
+        Healths.AddComponent(enemy, New Health With {
+            .health = 100,
+            .maxHealth = 100
+        })
     End Sub
 
     Public Sub CreateBullet(startPos As PointF, targetPos As PointF, entityType As Integer)
