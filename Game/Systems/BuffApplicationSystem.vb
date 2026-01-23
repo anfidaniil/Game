@@ -52,6 +52,8 @@
                 If hp.health > hp.maxHealth Then
                     hp.health = hp.maxHealth
                 End If
+
+                Debug.WriteLine("HP: " & hp.health)
         End Select
 
         buff.isConsumed = True

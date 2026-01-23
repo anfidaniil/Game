@@ -27,7 +27,6 @@ Public Class World
 
     Public Attacks As New ComponentStore(Of AttackComponent)
 
-
     Public CollisionEvents As New List(Of CollisionEvent)
     Public CollisionLookupTable As New Dictionary(Of Point, List(Of Integer))
     Public EntityDestructionEvents As New HashSet(Of Integer)
@@ -127,9 +126,6 @@ Public Class World
             .sA = 64,
             .sB = 64
         })
-        Healths.AddComponent(player, New Health With {
-            .health = 50
-        })
         Damages.AddComponent(player, New DamageComponent With {
                              .damage = 1})
         Players.AddComponent(player, New PlayerComponent())
@@ -168,11 +164,9 @@ Public Class World
             .sA = 64,
             .sB = 64
         })
-        Healths.AddComponent(enemy, New Health With {
-            .health = 100
-        })
         Damages.AddComponent(enemy, New DamageComponent With {
-                             .damage = 1})
+            .damage = 2
+        })
 
         Enemies.AddComponent(enemy, New EnemyComponent())
         Attacks.AddComponent(enemy, New AttackComponent With {
@@ -182,8 +176,8 @@ Public Class World
         })
 
         Healths.AddComponent(enemy, New Health With {
-            .health = 100,
-            .maxHealth = 100
+            .health = 40,
+            .maxHealth = 40
         })
     End Sub
 
