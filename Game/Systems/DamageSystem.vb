@@ -1,4 +1,5 @@
-﻿Public Class DamageSystem
+﻿Imports System.Drawing
+Public Class DamageSystem
     Implements ISystem
     Public Sub Update(world As World, dt As Single) Implements ISystem.Update
         For Each ev In world.CollisionEvents
@@ -36,6 +37,10 @@
 
                 hc.health = hc.health - dc.damage
 
+                If ev.entityB = world.PlayerID Then
+                    OnPlayerReceiveDamage(world, ev.entityB)
+                End If
+
                 world.IFrames.AddComponent(
                     ev.entityB,
                     New InvincibilityComponent With {
@@ -65,6 +70,10 @@
 
                 hc.health = hc.health - dc.damage
 
+                If ev.entityA = world.PlayerID Then
+                    OnPlayerReceiveDamage(world, ev.entityA)
+                End If
+
                 world.IFrames.AddComponent(
                     ev.entityA,
                     New InvincibilityComponent With {
@@ -91,6 +100,36 @@
                 world.EntityDestructionEvents.Add(ev.entityB)
             End If
         Next
+    End Sub
+
+    Private Sub OnPlayerReceiveDamage(world As World, playerID As Integer)
+        If Not world.HealthBars.HasComponent(playerID) OrElse Not world.Healths.HasComponent(playerID) Then
+            Return
+        End If
+
+        Dim hb = world.HealthBars.GetComponent(playerID)
+        Dim hp = world.Healths.GetComponent(playerID)
+
+        If hp.maxHealth <= 0 Then hp.maxHealth = 100
+
+        Dim barWidth As Integer = hb.fullHealthSprite.Width
+        Dim barHeight As Integer = hb.fullHealthSprite.Height
+
+        Dim healthPercentage As Single = Math.Max(0, CSng(hp.health) / CSng(hp.maxHealth))
+        Dim visibleWidth As Integer = CInt(healthPercentage * barWidth)
+
+        Using g As Graphics = Graphics.FromImage(hb.currentHealthSprite)
+            g.Clear(Color.Transparent)
+
+            g.DrawImage(hb.emptyHealthSprite, 0, 0, barWidth, barHeight)
+
+            If visibleWidth > 0 Then
+                Dim srcRect As New Rectangle(0, 0, visibleWidth, barHeight)
+                Dim destRect As New Rectangle(0, 0, visibleWidth, barHeight)
+
+                g.DrawImage(hb.fullHealthSprite, destRect, srcRect, GraphicsUnit.Pixel)
+            End If
+        End Using
     End Sub
 
     Public Sub Draw(world As World, g As Graphics) Implements ISystem.Draw

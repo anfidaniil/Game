@@ -1,4 +1,5 @@
-﻿Imports System.Numerics
+﻿Imports System.IO
+Imports System.Numerics
 
 Public Class World
     Public game As Game
@@ -19,6 +20,7 @@ Public Class World
     Public Buffs As New ComponentStore(Of BuffComponent)
 
     Public Healths As New ComponentStore(Of Health)
+    Public HealthBars As New ComponentStore(Of HealthBarComponent)
 
     Public Damages As New ComponentStore(Of DamageComponent)
     Public IFrames As New ComponentStore(Of InvincibilityComponent)
@@ -138,6 +140,31 @@ Public Class World
             .health = 100,
             .maxHealth = 100
         })
+
+        Try
+            Dim fullPath As String = Path.Combine("Assets", "FullHealth.png")
+            Dim emptyPath As String = Path.Combine("Assets", "emptyhealth.png")
+
+            If File.Exists(fullPath) AndAlso File.Exists(emptyPath) Then
+                Dim full = New Bitmap(fullPath)
+                Dim empty = New Bitmap(emptyPath)
+                Dim current As New Bitmap(full.Width, full.Height)
+
+                Using g As Graphics = Graphics.FromImage(current)
+                    g.DrawImage(full, 0, 0)
+                End Using
+
+                HealthBars.AddComponent(player, New HealthBarComponent With {
+                    .fullHealthSprite = full,
+                    .emptyHealthSprite = empty,
+                    .currentHealthSprite = current,
+                    .position = New PointF(20, 20)
+                })
+            Else
+
+            End If
+        Catch ex As Exception
+        End Try
     End Sub
 
     Public Sub CreateEnemy(pos As PointF)
