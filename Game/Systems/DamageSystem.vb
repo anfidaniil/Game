@@ -11,34 +11,47 @@ Public Class DamageSystem
             End If
 
             If world.Projectiles.HasComponent(ev.entityA) Then
-                If world.Projectiles.GetComponent(ev.entityA).entityType = 0 And world.Enemies.HasComponent(ev.entityB) Then Continue For
-                If world.Projectiles.GetComponent(ev.entityA).entityType = 1 And world.Players.HasComponent(ev.entityB) Then Continue For
+                If world.Projectiles.GetComponent(ev.entityA).entityType = 0 And world.Enemies.HasComponent(ev.entityB) Then
+                    Continue For
+                End If
+                If world.Projectiles.GetComponent(ev.entityA).entityType = 1 And world.Players.HasComponent(ev.entityB) Then
+                    Continue For
+                End If
             End If
             If world.Projectiles.HasComponent(ev.entityB) Then
-                If world.Projectiles.GetComponent(ev.entityB).entityType = 0 And world.Enemies.HasComponent(ev.entityA) Then Continue For
-                If world.Projectiles.GetComponent(ev.entityB).entityType = 1 And world.Players.HasComponent(ev.entityA) Then Continue For
+                If world.Projectiles.GetComponent(ev.entityB).entityType = 0 And world.Enemies.HasComponent(ev.entityA) Then
+                    Continue For
+                End If
+                If world.Projectiles.GetComponent(ev.entityB).entityType = 1 And world.Players.HasComponent(ev.entityA) Then
+                    Continue For
+                End If
             End If
 
             If world.Damages.HasComponent(ev.entityA) And world.Healths.HasComponent(ev.entityB) Then
                 Dim hc = world.Healths.GetComponent(ev.entityB)
                 Dim dc = world.Damages.GetComponent(ev.entityA)
 
-                If world.IFrames.HasComponent(ev.entityB) Then Continue For
+                If Not world.IFrames.HasComponent(ev.entityB) Then
+                    hc.health = hc.health - dc.damage
 
-                hc.health = hc.health - dc.damage
+                    If ev.entityB = world.PlayerID Then
+                        world.UpdatePlayerHealthBar()
+                    End If
 
-                If ev.entityB = world.PlayerID Then
-                    world.UpdatePlayerHealthBar()
-                End If
+                    world.IFrames.AddComponent(
+                        ev.entityB,
+                        New InvincibilityComponent With {
+                            .timeRemaining = World.IFRAMES_DURATION
+                        }
+                    )
 
-                world.IFrames.AddComponent(ev.entityB, New InvincibilityComponent With {.timeRemaining = World.IFRAMES_DURATION})
+                    If hc.health < 0 Then
+                        world.EntityDestructionEvents.Add(ev.entityB)
 
-                If hc.health < 0 Then
-                    world.EntityDestructionEvents.Add(ev.entityB)
-
-                    If world.Projectiles.HasComponent(ev.entityA) Then
-                        If world.Projectiles.GetComponent(ev.entityA).entityType = 1 Then
-                            world.game.score = world.game.score + 1
+                        If world.Projectiles.HasComponent(ev.entityA) Then
+                            If world.Projectiles.GetComponent(ev.entityA).entityType = 1 Then
+                                world.game.score = world.game.score + 1
+                            End If
                         End If
                     End If
                 End If
@@ -48,22 +61,27 @@ Public Class DamageSystem
                 Dim hc = world.Healths.GetComponent(ev.entityA)
                 Dim dc = world.Damages.GetComponent(ev.entityB)
 
-                If world.IFrames.HasComponent(ev.entityA) Then Continue For
+                If Not world.IFrames.HasComponent(ev.entityA) Then
+                    hc.health = hc.health - dc.damage
 
-                hc.health = hc.health - dc.damage
+                    If ev.entityA = world.PlayerID Then
+                        world.UpdatePlayerHealthBar()
+                    End If
 
-                If ev.entityA = world.PlayerID Then
-                    world.UpdatePlayerHealthBar()
-                End If
+                    world.IFrames.AddComponent(
+                        ev.entityA,
+                        New InvincibilityComponent With {
+                            .timeRemaining = World.IFRAMES_DURATION
+                        }
+                    )
 
-                world.IFrames.AddComponent(ev.entityA, New InvincibilityComponent With {.timeRemaining = World.IFRAMES_DURATION})
+                    If hc.health < 0 Then
+                        world.EntityDestructionEvents.Add(ev.entityA)
 
-                If hc.health < 0 Then
-                    world.EntityDestructionEvents.Add(ev.entityA)
-
-                    If world.Projectiles.HasComponent(ev.entityB) Then
-                        If world.Projectiles.GetComponent(ev.entityB).entityType = 1 Then
-                            world.game.score = world.game.score + 1
+                        If world.Projectiles.HasComponent(ev.entityB) Then
+                            If world.Projectiles.GetComponent(ev.entityB).entityType = 1 Then
+                                world.game.score = world.game.score + 1
+                            End If
                         End If
                     End If
                 End If

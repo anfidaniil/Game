@@ -1,5 +1,5 @@
-﻿Imports System.Reflection.Emit
-Imports System.Drawing
+﻿Imports System.Drawing
+Imports System.Reflection.Emit
 
 Public Class RenderSystem
     Implements ISystem
@@ -34,7 +34,6 @@ Public Class RenderSystem
 
         Dim firstTileX As Integer = camX \ World.TILE_SIZE
         Dim firstTileY As Integer = camY \ World.TILE_SIZE
-
         Dim lastTileX As Integer = (camX + camera.viewWidth) \ World.TILE_SIZE
         Dim lastTileY As Integer = (camY + camera.viewHeight) \ World.TILE_SIZE
 
@@ -46,21 +45,15 @@ Public Class RenderSystem
         For ty = firstTileY To lastTileY
             For tx = firstTileX To lastTileX
                 Dim tileKey As New Point(tx, ty)
-
                 If world.game.level.ContainsKey(tileKey) Then
                     Dim bmp = world.game.level(tileKey)
-                    g.DrawImageUnscaled(
-                        bmp,
-                        tx * World.TILE_SIZE,
-                        ty * World.TILE_SIZE
-                    )
+                    g.DrawImageUnscaled(bmp, tx * World.TILE_SIZE, ty * World.TILE_SIZE)
                 End If
             Next
         Next
 
         For Each kv In world.Transforms.All
             Dim id = kv.Key
-
             If world.Renders.HasComponent(id) Then
 
                 Dim t = kv.Value
@@ -74,7 +67,6 @@ Public Class RenderSystem
 
                 If Not world.Immovables.HasComponent(id) Then
                     g.DrawImage(world.game.charSprites, dst, src, GraphicsUnit.Pixel)
-                Else
                 End If
             End If
         Next
@@ -82,20 +74,11 @@ Public Class RenderSystem
         g.ResetClip()
         g.ResetTransform()
 
-        Dim uiScale As Single = Math.Max(1.0F, Form1.Width / 1280.0F)
-
         Dim score = world.game.score
-
-        Dim fontSize As Single = 20.0F * uiScale
-
-        Using font As New Font("Arial", fontSize, FontStyle.Bold)
+        Using font As New Font("Arial", 16, FontStyle.Bold)
             Dim text = "Score: " & score
             Dim size = g.MeasureString(text, font)
-
-            Dim paddingX As Integer = CInt(40 * uiScale)
-            Dim paddingY As Integer = CInt(20 * uiScale)
-
-            g.DrawString(text, font, Brushes.Gray, (Form1.Width - size.Width) - paddingX, paddingY)
+            g.DrawString(text, font, Brushes.Gray, (Form1.Width - size.Width) - 40, 20)
         End Using
 
         If world.HealthBars.HasComponent(world.PlayerID) Then
@@ -103,18 +86,21 @@ Public Class RenderSystem
 
             If hb.currentHealthSprite IsNot Nothing Then
 
-                Dim finalScale As Single = 2.5F * uiScale
+                Dim scale As Single = 2.0F
 
-                Dim finalWidth As Integer = CInt(hb.currentHealthSprite.Width * finalScale)
-                Dim finalHeight As Integer = CInt(hb.currentHealthSprite.Height * finalScale)
+                If Form1.WindowState = FormWindowState.Maximized OrElse Form1.Width > 1400 Then
+                    scale = 4.0F
+                End If
 
-                Dim posX As Integer = CInt(20 * uiScale)
-                Dim posY As Integer = CInt(20 * uiScale)
+                Dim finalWidth As Integer = CInt(hb.currentHealthSprite.Width * scale)
+                Dim finalHeight As Integer = CInt(hb.currentHealthSprite.Height * scale)
+
+                Dim padding As Integer = If(scale > 2.0F, 40, 20)
 
                 g.DrawImage(
                     hb.currentHealthSprite,
-                    posX,
-                    posY,
+                    padding,
+                    padding,
                     finalWidth,
                     finalHeight
                 )
