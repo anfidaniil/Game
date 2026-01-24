@@ -202,4 +202,37 @@
   <data name="video-game-menu-click-sounds" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Assets\Sounds\video-game-menu-click-sounds.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="button-ui-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\button-ui-1.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="button-ui-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\button-ui-2.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="footstep-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\footstep-1.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="footstep-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\footstep-2.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="footstep-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\footstep-3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="footstep-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\footstep-4.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="foorstep-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\foorstep-5.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="shoot-1-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\shoot-1-1.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="shoot-1-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\shoot-1-2.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="shoot-1-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\shoot-1-3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="shoot-1-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Assets\Sounds\shoot-1-4.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
