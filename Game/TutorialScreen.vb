@@ -14,6 +14,8 @@ Public Class TutorialScreen
     Private imgBtnStart As Bitmap
     Private imgBtnBack As Bitmap
 
+    Private imgTutorialBG As Bitmap
+
     Public Sub New(gameInstance As Game)
         Me.game = gameInstance
         LoadResources()
@@ -26,12 +28,18 @@ Public Class TutorialScreen
 
         imgBtnStart = My.Resources.GameResources.btnNOVOJOGO
         imgBtnBack = My.Resources.GameResources.btnSAIR
+
+        imgTutorialBG = My.Resources.GameResources.MAINmenu
     End Sub
 
     Public Sub Draw(g As Graphics, screenWidth As Integer, screenHeight As Integer)
-        Using brush As New SolidBrush(Color.FromArgb(200, 0, 0, 0))
-            g.FillRectangle(brush, 0, 0, screenWidth, screenHeight)
-        End Using
+        If imgTutorialBG IsNot Nothing Then
+            g.DrawImage(imgTutorialBG, 0, 0, screenWidth, screenHeight)
+        Else
+            Using brush As New SolidBrush(Color.FromArgb(230, 20, 20, 40))
+                g.FillRectangle(brush, 0, 0, screenWidth, screenHeight)
+            End Using
+        End If
 
         If cards.Count = 0 Then Return
 
