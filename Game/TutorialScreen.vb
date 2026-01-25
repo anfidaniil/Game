@@ -1,82 +1,101 @@
 ﻿Imports System.Drawing
+Imports Windows.Win32.UI.Input
 
 Public Class TutorialScreen
     Private game As Game
-    Private cards As New List(Of Bitmap)
+
+    Private cards As New List(Of UICard)
     Private currentIndex As Integer = 0
+
+    Public buttons As New List(Of UIButton)
 
     Private leftArrowRect As Rectangle
     Private rightArrowRect As Rectangle
-
-    Private btnBackRect As Rectangle
-    Private btnStartRect As Rectangle
-
-    Private imgBtnStart As Bitmap
-    Private imgBtnBack As Bitmap
-
     Private imgTutorialBG As Bitmap
 
     Public Sub New(gameInstance As Game)
         Me.game = gameInstance
         LoadResources()
+        InitializeButtons()
     End Sub
 
     Private Sub LoadResources()
-        cards.Add(My.Resources.GameResources.movementCART)
-        cards.Add(My.Resources.GameResources.tiroCART)
-        cards.Add(My.Resources.GameResources.menuCART)
-
-        imgBtnStart = My.Resources.GameResources.btnNOVOJOGO
-        imgBtnBack = My.Resources.GameResources.btnSAIR
-
         imgTutorialBG = My.Resources.GameResources.MAINmenu
+
+        cards.Add(New UICard(My.Resources.GameResources.movementCART))
+        cards.Add(New UICard(My.Resources.GameResources.tiroCART))
+        cards.Add(New UICard(My.Resources.GameResources.menuCART))
+    End Sub
+
+    Private Sub InitializeButtons()
+        Dim screenW As Integer = Form1.Width
+        Dim screenH As Integer = Form1.Height
+        Dim btnW As Integer = 200
+        Dim btnH As Integer = 50
+        Dim spacing As Integer = 40
+
+        Dim btnY As Integer = screenH - 150
+        Dim totalWidth As Integer = (btnW * 2) + spacing
+        Dim startX As Integer = (screenW - totalWidth) \ 2
+
+        buttons.Add(New UIButtonQuit With {
+            .bounds = New Rectangle(startX, btnY, btnW, btnH),
+            .text = "Voltar",
+            .onClick = Sub() game.gameState = GameState.Starting,
+            .sprite = Nothing
+        })
+
+        Dim startSprite As Bitmap = Nothing
+        Dim rawImg = My.Resources.GameResources.btnNOVOJOGO
+        If rawImg IsNot Nothing Then
+            startSprite = New Bitmap(rawImg.Width, rawImg.Height \ 3)
+            Using g As Graphics = Graphics.FromImage(startSprite)
+                g.DrawImage(rawImg, New Rectangle(0, 0, startSprite.Width, startSprite.Height),
+                            New Rectangle(0, 0, rawImg.Width, rawImg.Height \ 3),
+                            GraphicsUnit.Pixel)
+            End Using
+        End If
+
+        buttons.Add(New UIButtonStartNewGame With {
+            .bounds = New Rectangle(startX + btnW + spacing, btnY, btnW, btnH),
+            .text = "",
+            .onClick = Sub() game.StartNewGame(),
+            .sprite = startSprite
+        })
     End Sub
 
     Public Sub Draw(g As Graphics, screenWidth As Integer, screenHeight As Integer)
         If imgTutorialBG IsNot Nothing Then
             g.DrawImage(imgTutorialBG, 0, 0, screenWidth, screenHeight)
         Else
-            Using brush As New SolidBrush(Color.FromArgb(230, 20, 20, 40))
-                g.FillRectangle(brush, 0, 0, screenWidth, screenHeight)
-            End Using
+            g.Clear(Color.FromArgb(20, 20, 40))
         End If
 
         If cards.Count = 0 Then Return
 
+        ' Layout
         Dim currentCard = cards(currentIndex)
         Dim scale As Single = 1.0F
-        If currentCard.Width > screenWidth * 0.8 Then scale = (screenWidth * 0.8) / currentCard.Width
+        If currentCard.Width > screenWidth * 0.8 Then
+            scale = (screenWidth * 0.8) / currentCard.Width
+        End If
 
         Dim cardW As Integer = CInt(currentCard.Width * scale)
         Dim cardH As Integer = CInt(currentCard.Height * scale)
-
         Dim centerX As Integer = (screenWidth - cardW) \ 2
-        Dim centerY As Integer = (screenHeight - cardH) \ 2
+        Dim centerY As Integer = CInt(screenHeight * 0.1) ' Posição Alta
 
         If currentIndex > 0 Then
-            Dim prevCard = cards(currentIndex - 1)
             Dim prevX As Integer = centerX - cardW - 50
-            g.DrawImage(prevCard, prevX, centerY, cardW, cardH)
-
-            Using brush As New SolidBrush(Color.FromArgb(150, 0, 0, 0))
-                g.FillRectangle(brush, prevX, centerY, cardW, cardH)
-            End Using
+            cards(currentIndex - 1).Draw(g, New Rectangle(prevX, centerY, cardW, cardH), False)
         End If
 
         If currentIndex < cards.Count - 1 Then
-            Dim nextCard = cards(currentIndex + 1)
             Dim nextX As Integer = centerX + cardW + 50
-            g.DrawImage(nextCard, nextX, centerY, cardW, cardH)
-
-            Using brush As New SolidBrush(Color.FromArgb(150, 0, 0, 0))
-                g.FillRectangle(brush, nextX, centerY, cardW, cardH)
-            End Using
+            cards(currentIndex + 1).Draw(g, New Rectangle(nextX, centerY, cardW, cardH), False)
         End If
 
-        g.DrawImage(currentCard, centerX, centerY, cardW, cardH)
-        Using pen As New Pen(Color.Gold, 4)
-            g.DrawRectangle(pen, centerX, centerY, cardW, cardH)
-        End Using
+        cards(currentIndex).Draw(g, New Rectangle(centerX, centerY, cardW, cardH), True)
 
         leftArrowRect = New Rectangle(50, centerY + (cardH \ 2) - 25, 50, 50)
         rightArrowRect = New Rectangle(screenWidth - 100, centerY + (cardH \ 2) - 25, 50, 50)
@@ -89,23 +108,20 @@ Public Class TutorialScreen
             g.FillPolygon(Brushes.White, {New Point(rightArrowRect.Left, rightArrowRect.Top), New Point(rightArrowRect.Right, rightArrowRect.Top + 25), New Point(rightArrowRect.Left, rightArrowRect.Bottom)})
         End If
 
-
-        Dim btnY As Integer = screenHeight - 100
-        Dim btnW As Integer = 200
-        Dim btnH As Integer = 60
-
-        btnBackRect = New Rectangle(centerX, btnY, btnW, btnH)
-        If imgBtnBack IsNot Nothing Then
-            Dim srcRect As New Rectangle(0, 0, imgBtnBack.Width, imgBtnBack.Height / 3)
-            g.DrawImage(imgBtnBack, btnBackRect, srcRect, GraphicsUnit.Pixel)
-        End If
-
-        btnStartRect = New Rectangle(centerX + cardW - btnW, btnY, btnW, btnH)
-        If imgBtnStart IsNot Nothing Then
-            Dim srcRect As New Rectangle(0, 0, imgBtnStart.Width, imgBtnStart.Height / 3)
-            g.DrawImage(imgBtnStart, btnStartRect, srcRect, GraphicsUnit.Pixel)
-        End If
-
+        For Each btn In buttons
+            If (btn.sprite IsNot Nothing) Then
+                g.DrawImage(btn.sprite, btn.bounds)
+            Else
+                g.FillRectangle(Brushes.DarkGray, btn.bounds)
+                g.DrawRectangle(Pens.White, btn.bounds)
+                Using font As New Font("Arial", 16, FontStyle.Bold)
+                    Dim size = g.MeasureString(btn.text, font)
+                    g.DrawString(btn.text, font, Brushes.White,
+                        btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,
+                        btn.bounds.Y + (btn.bounds.Height - size.Height) \ 2)
+                End Using
+            End If
+        Next
     End Sub
 
     Public Sub HandleClick(mousePos As Point)
@@ -117,12 +133,10 @@ Public Class TutorialScreen
             currentIndex += 1
         End If
 
-        If btnBackRect.Contains(mousePos) Then
-            game.gameState = GameState.Starting
-        End If
-
-        If btnStartRect.Contains(mousePos) Then
-            game.StartNewGame()
-        End If
+        For Each btn In buttons
+            If btn.bounds.Contains(mousePos) Then
+                btn.onClick?.Invoke()
+            End If
+        Next
     End Sub
 End Class
