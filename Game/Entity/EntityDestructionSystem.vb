@@ -25,6 +25,7 @@ Public Class EntityDestructionSystem
             world.Buffs.RemoveComponent(e)
             world.AudioSources.RemoveComponent(e)
             world.AudioTriggers.RemoveComponent(e)
+            world.HealthBars.RemoveComponent(e)
 
             ' Remove entity itself
             world.EntityManager.RemoveEntity(e)
