@@ -5,20 +5,26 @@ Public Class StartScreen
     Dim buttonWidth = 200
     Dim buttonHeight = 50
 
-    Public Sub New(screenWidth As Integer, screenHeight As Integer, restart As Action, quit As Action)
+    Public Sub New(screenWidth As Integer, screenHeight As Integer, restart As Action, quit As Action, tutorial As Action)
         Dim centerX = (screenWidth - buttonWidth) \ 2
         Dim centerY = screenHeight \ 2
 
         buttons.Add(New UIButtonStartNewGame With {
-            .bounds = New Rectangle(centerX - buttonWidth / 2 - 20, centerY, buttonWidth, buttonHeight),
-            .text = "Start New Game",
+            .bounds = New Rectangle(centerX - (buttonWidth \ 2) - 20, centerY, buttonWidth, buttonHeight),
+            .text = "Novo Jogo",
             .onClick = restart
         })
 
         buttons.Add(New UIButtonQuit With {
-            .bounds = New Rectangle(centerX + buttonWidth / 2 + 20, centerY, buttonWidth, buttonHeight),
-            .text = "Quit",
+            .bounds = New Rectangle(centerX + (buttonWidth \ 2) + 20, centerY, buttonWidth, buttonHeight),
+            .text = "Sair",
             .onClick = quit
+        })
+
+        buttons.Add(New UIButtonContinue With {
+            .bounds = New Rectangle(centerX, centerY + buttonHeight + 20, buttonWidth, buttonHeight),
+            .text = "Tutorial",
+            .onClick = tutorial
         })
     End Sub
 
@@ -56,6 +62,14 @@ Public Class StartScreen
 
             If (btn.sprite IsNot Nothing) Then
                 g.DrawImage(btn.sprite, btn.bounds)
+                If btn.text = "Tutorial" Then
+                    Using font As New Font("Arial", 16, FontStyle.Bold)
+                        Dim size = g.MeasureString(btn.text, font)
+                        g.DrawString(btn.text, font, Brushes.White,
+                           btn.bounds.X + (btn.bounds.Width - size.Width) \ 2,
+                           btn.bounds.Y + (btn.bounds.Height - size.Height) \ 2)
+                    End Using
+                End If
             Else
                 g.FillRectangle(Brushes.DarkGray, btn.bounds)
                 g.DrawRectangle(Pens.White, btn.bounds)

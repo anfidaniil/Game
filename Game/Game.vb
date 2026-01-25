@@ -1,5 +1,4 @@
-﻿
-Imports System.Drawing.Imaging
+﻿Imports System.Drawing.Imaging
 Imports System.Security.Policy
 
 Public Class Game
@@ -7,6 +6,7 @@ Public Class Game
     Public gameOverUI As GameOverScreen
     Public menuScreen As MenuScreen
     Public startingMenuScreen As StartScreen
+    Public tutorialScreen As TutorialScreen
     Public gameState As GameState
 
     Public level As New Dictionary(Of Point, Bitmap)
@@ -27,6 +27,7 @@ Public Class Game
         'InitializeSounds()
 
         Me.world = New World(input, Me)
+        Me.tutorialScreen = New TutorialScreen(Me)
         CreateTestWorld()
         Me.gameState = GameState.Starting
         menuScreen = New MenuScreen(
@@ -40,9 +41,9 @@ Public Class Game
             Form1.Width,
             Form1.Height,
             Sub() StartNewGame(),
-            Sub() Form1.Close()
+            Sub() Form1.Close(),
+            Sub() gameState = gameState.Tutorial
         )
-
     End Sub
 
     Public Sub ChangeCameraView()
@@ -63,7 +64,8 @@ Public Class Game
             Form1.Width,
             Form1.Height,
             Sub() StartNewGame(),
-            Sub() Form1.Close()
+            Sub() Form1.Close(),
+            Sub() gameState = gameState.Tutorial
         )
     End Sub
 
@@ -109,6 +111,8 @@ Public Class Game
         Select Case gameState
             Case GameState.Menu
 
+            Case gameState.Tutorial
+
             Case GameState.Playing
                 world.Update(dt)
                 world.CollisionEvents.Clear()
@@ -129,7 +133,18 @@ Public Class Game
             Case GameState.GameOver
                 world.Draw(g)
                 gameOverUI.Draw(g, world)
+            Case gameState.Tutorial
+                tutorialScreen.Draw(g, Form1.Width, Form1.Height)
 
+        End Select
+    End Sub
+
+    Public Sub HandleMouseClick(location As Point)
+        Select Case gameState
+            Case gameState.Tutorial
+                tutorialScreen.HandleClick(location)
+            Case GameState.Starting
+                startingMenuScreen.HandleMouseClick(location)
         End Select
     End Sub
 
