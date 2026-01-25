@@ -185,7 +185,7 @@ Public Class World
             .health = 100,
             .maxHealth = 100
         })
-                                        
+
         Dim full = New Bitmap(My.Resources.GameResources.FullHealth)
         Dim empty = New Bitmap(My.Resources.GameResources.emptyhealth)
         Dim current As New Bitmap(My.Resources.GameResources.FullHealth)
@@ -195,14 +195,14 @@ Public Class World
             .currentHealthSprite = current,
             .position = New PointF(20, 20)
         })
-                                          
+
         AudioSources.AddComponent(player, New AudioSourceComponent With {
              .soundId = New List(Of String) From {"footsteps_1", "footsteps_2", "footsteps_3", "footsteps_4"},
              .volume = 0.5F
         })
         AudioTriggers.AddComponent(player, New AudioTriggerComponent With {.playRequested = False})
 
-        
+
     End Sub
 
     Public Sub CreateEnemy(pos As PointF)
