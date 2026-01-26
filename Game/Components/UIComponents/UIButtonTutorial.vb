@@ -1,10 +1,9 @@
-﻿Imports System.Drawing
-
+﻿
 Public Class UIButtonTutorial
     Inherits UIButton
 
     Public Sub New()
-        Dim btn = My.Resources.GameResources.btnTUTORIAL
+        Dim btn = New Bitmap(My.Resources.GameResources.btnTUTORIAL)
 
         If btn IsNot Nothing Then
             Dim spriteRect As New Rectangle(0, 0, 200, 50)

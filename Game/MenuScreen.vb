@@ -12,25 +12,25 @@
 
         buttons.Add(New UIButtonContinue With {
             .bounds = New Rectangle(centerX - buttonWidth - gap, centerY, buttonWidth, buttonHeight),
-            .text = "",
+            .text = "Continue",
             .onClick = continueAction
         })
 
         buttons.Add(New UIButtonStartNewGame With {
             .bounds = New Rectangle(centerX + gap, centerY, buttonWidth, buttonHeight),
-            .text = "",
+            .text = "Start New Game",
             .onClick = restart
         })
 
         buttons.Add(New UIButtonTutorial With {
             .bounds = New Rectangle(centerX - buttonWidth - gap, centerY + 90, buttonWidth, buttonHeight),
-            .text = "",
+            .text = "Tutorial",
             .onClick = tutorial
         })
 
         buttons.Add(New UIButtonBackToMenu With {
             .bounds = New Rectangle(centerX + gap, centerY + 90, buttonWidth, buttonHeight),
-            .text = "",
+            .text = "Menu",
             .onClick = backToMenu
         })
     End Sub
@@ -72,6 +72,7 @@
 
     Public Sub HandleMouseClick(mousePos As Point)
         For Each btn In buttons
+            Debug.WriteLine(btn.text)
             If btn.bounds.Contains(mousePos) Then
                 btn.onClick?.Invoke()
             End If

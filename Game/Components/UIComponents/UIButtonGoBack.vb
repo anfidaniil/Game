@@ -8,7 +8,7 @@ Public Class UIButtonGoBack
 
         If rawImg IsNot Nothing Then
             Me.sprite = rawImg
-            Me.bounds = New Rectangle(0, 0, 200, 50)
+
         End If
     End Sub
 End Class
