@@ -113,19 +113,6 @@ Public Class World
         AudioTriggers.AddComponent(shootSounds, New AudioTriggerComponent With {.playRequested = False})
     End Sub
 
-
-    Public Sub CreateButton()
-        Dim btn = EntityManager.CreateEntity()
-        BtnId = btn
-
-        AudioSources.AddComponent(btn, New AudioSourceComponent With {
-             .soundId = New List(Of String) From {"button_ui_1", "button_ui_2"},
-             .volume = 0.5F
-        })
-        AudioTriggers.AddComponent(btn, New AudioTriggerComponent With {.playRequested = False})
-    End Sub
-
-
     Public Sub CreateCamera()
         Dim camera = EntityManager.CreateEntity()
         Cameras.AddComponent(camera, New CameraComponent With {
@@ -288,7 +275,7 @@ Public Class World
         'When we'll have sounds we would add those components
         AudioSources.AddComponent(bullet, New AudioSourceComponent With {
              .soundId = New List(Of String) From {"bulletImpact1", "bulletImpact2"},
-             .volume = 0.5F
+             .volume = 1.0F
         })
         AudioTriggers.AddComponent(bullet, New AudioTriggerComponent With {.playRequested = False})
     End Sub
