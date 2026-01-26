@@ -9,29 +9,33 @@ Public Class StartScreen
         Dim centerX = (screenWidth - buttonWidth) \ 2
         Dim centerY = screenHeight \ 2
 
+        Dim gap As Integer = 10
+
+
         buttons.Add(New UIButtonStartNewGame With {
-            .bounds = New Rectangle(centerX - (buttonWidth \ 2) - 20, centerY, buttonWidth, buttonHeight),
-            .text = "Novo Jogo",
-            .onClick = restart
-        })
-
-        buttons.Add(New UIButtonQuit With {
-            .bounds = New Rectangle(centerX + (buttonWidth \ 2) + 20, centerY, buttonWidth, buttonHeight),
-            .text = "Sair",
-            .onClick = quit
-        })
-
-        buttons.Add(New UIButtonContinue With {
-            .bounds = New Rectangle(centerX - (buttonWidth \ 2) - 20, centerY + buttonHeight + 20, buttonWidth, buttonHeight),
-            .text = "Continue",
+            .bounds = New Rectangle(centerX - (buttonWidth \ 2) - gap, centerY, buttonWidth, buttonHeight),
+            .text = "",
             .onClick = restart
         })
 
         buttons.Add(New UIButtonTutorial With {
-            .bounds = New Rectangle(centerX + (buttonWidth \ 2) + 20, centerY + buttonHeight + 20, buttonWidth, buttonHeight),
+            .bounds = New Rectangle(centerX + (buttonWidth \ 2) + gap, centerY, buttonWidth, buttonHeight),
             .text = "",
             .onClick = tutorial
         })
+
+        buttons.Add(New UIButtonQuit With {
+            .bounds = New Rectangle(centerX, centerY + buttonHeight + 20, buttonWidth, buttonHeight),
+            .text = "",
+            .onClick = quit
+        })
+
+        ' Botão Continuar (Desativado)
+        ' buttons.Add(New UIButtonContinue With {
+        '     .bounds = New Rectangle(centerX, centerY + (buttonHeight * 2) + 40, buttonWidth, buttonHeight),
+        '     .text = "Continue",
+        '     .onClick = restart
+        ' })
     End Sub
 
     Public Sub Draw(g As Graphics, world As World)

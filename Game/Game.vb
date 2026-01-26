@@ -34,15 +34,16 @@ Public Class Game
             Form1.Width,
             Form1.Height,
             Sub() StartNewGame(),
-            Sub() Form1.Close(),
-            Sub() gameState = GameState.Playing
+            Sub() gameState = GameState.Tutorial,
+            Sub() gameState = GameState.Playing,
+            Sub() gameState = GameState.Starting
         )
         startingMenuScreen = New StartScreen(
             Form1.Width,
             Form1.Height,
             Sub() StartNewGame(),
             Sub() Form1.Close(),
-            Sub() gameState = gameState.Tutorial
+            Sub() gameState = GameState.Tutorial
         )
     End Sub
 
@@ -52,12 +53,14 @@ Public Class Game
         cam.viewHeight = Form1.Height
         cam.viewWidth = Form1.Width
         Me.tutorialScreen = New TutorialScreen(Me)
+
         menuScreen = New MenuScreen(
             Form1.Width,
             Form1.Height,
             Sub() StartNewGame(),
-            Sub() Form1.Close(),
-            Sub() gameState = GameState.Playing
+            Sub() gameState = GameState.Tutorial,
+            Sub() gameState = GameState.Playing,
+            Sub() gameState = GameState.Starting
         )
 
         startingMenuScreen = New StartScreen(
@@ -141,10 +144,14 @@ Public Class Game
 
     Public Sub HandleMouseClick(location As Point)
         Select Case gameState
-            Case gameState.Tutorial
+            Case GameState.Tutorial
                 tutorialScreen.HandleClick(location)
             Case GameState.Starting
                 startingMenuScreen.HandleMouseClick(location)
+            Case GameState.Menu
+                menuScreen.HandleMouseClick(location)
+            Case GameState.GameOver
+                gameOverUI.HandleMouseClick(location)
         End Select
     End Sub
 
