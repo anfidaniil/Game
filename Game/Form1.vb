@@ -10,6 +10,14 @@
     Private accumulator As Double = 0
     Private Const FIXED_DT As Double = 0.01 ' 100 Hz
 
+    Private isSpaceDown As Boolean = False
+    Private isMouseDown As Boolean = False
+
+    Private Sub UpdateFireState()
+        If input IsNot Nothing Then
+            input.fire = (isSpaceDown OrElse isMouseDown)
+        End If
+    End Sub
 
     Public Sub CalculateFPS()
         fps = count
@@ -63,7 +71,9 @@
             Case Keys.A, Keys.Left : input.left = True
             Case Keys.S, Keys.Down : input.down = True
             Case Keys.D, Keys.Right : input.right = True
-            Case Keys.Space : input.fire = True
+            Case Keys.Space
+                isSpaceDown = True
+                UpdateFireState()
 
             Case Keys.E
                 If game.gameState = GameState.GameOver Then
@@ -83,13 +93,16 @@
             Case Keys.A, Keys.Left : input.left = False
             Case Keys.S, Keys.Down : input.down = False
             Case Keys.D, Keys.Right : input.right = False
-            Case Keys.Space : input.fire = False
+            Case Keys.Space
+                isSpaceDown = False
+                UpdateFireState()
         End Select
     End Sub
 
     Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
         If e.Button = MouseButtons.Left Then
-            input.fire = True
+            isMouseDown = True
+            UpdateFireState()
         End If
 
         Select Case game.gameState
@@ -106,7 +119,8 @@
 
     Private Sub Form1_MouseUP(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
         If e.Button = MouseButtons.Left Then
-            input.fire = False
+            isMouseDown = False
+            UpdateFireState()
         End If
     End Sub
 
