@@ -11,11 +11,16 @@
                 Dim vx = m.velocity.X + m.acceleration.X * dt
                 Dim vy = m.velocity.Y + m.acceleration.Y * dt
 
-                vx = Math.Clamp(vx, -m.max_velocity, m.max_velocity)
-                vy = Math.Clamp(vy, -m.max_velocity, m.max_velocity)
+                Dim magnitude As Double = Math.Sqrt(vx * vx + vy * vy)
+
+                If magnitude > m.max_velocity Then
+                    Dim scale = m.max_velocity / magnitude
+                    vx *= scale
+                    vy *= scale
+                End If
 
                 Dim dampingFactor As Single = CSng(Math.Exp(-m.damping * dt))
-                vx *= dampingFactor
+                vx *= dampingFactor 
                 vy *= dampingFactor
 
                 If Math.Abs(vx) < 0.01F Then vx = 0
