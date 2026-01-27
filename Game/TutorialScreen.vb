@@ -33,17 +33,26 @@ Public Class TutorialScreen
     Private Sub InitializeButtons()
         Dim screenW As Integer = Form1.Width
         Dim screenH As Integer = Form1.Height
-        Dim btnW As Integer = 200
-        Dim btnH As Integer = 50
-        Dim spacing As Integer = 40
-        Dim btnY As Integer = screenH - 150
+        Dim scale As Single = 1.0F
+        Dim bottomMargin As Integer = 150
+
+        If Form1.WindowState = FormWindowState.Maximized Then
+            scale = 2.0F
+            bottomMargin = 250
+        End If
+
+        Dim btnW As Integer = CInt(200 * scale)
+        Dim btnH As Integer = CInt(50 * scale)
+        Dim spacing As Integer = CInt(40 * scale)
+        Dim arrowSize As Integer = CInt(50 * scale)
+        Dim sideMargin As Integer = CInt(50 * scale)
+        Dim btnY As Integer = screenH - bottomMargin
         Dim totalWidth As Integer = (btnW * 2) + spacing
         Dim startX As Integer = (screenW - totalWidth) \ 2
-
         Dim arrowY As Integer = CInt(screenH * 0.4)
 
         btnLeft = New UIButtonArrowLeft With {
-            .bounds = New Rectangle(50, arrowY, 50, 50),
+            .bounds = New Rectangle(sideMargin, arrowY, arrowSize, arrowSize),
             .onClick = Sub()
                            AudioEngine.PlayOneShot("button_ui_1", 1.0F)
                            If currentIndex > 0 Then currentIndex -= 1
@@ -52,7 +61,7 @@ Public Class TutorialScreen
         buttons.Add(btnLeft)
 
         btnRight = New UIButtonArrowRight With {
-            .bounds = New Rectangle(screenW - 100, arrowY, 50, 50),
+            .bounds = New Rectangle(screenW - sideMargin - arrowSize, arrowY, arrowSize, arrowSize),
             .onClick = Sub()
                            AudioEngine.PlayOneShot("button_ui_1", 1.0F)
                            If currentIndex < cards.Count - 1 Then currentIndex += 1
@@ -82,6 +91,9 @@ Public Class TutorialScreen
     Public Sub Draw(g As Graphics, world As World)
         g.Clear(Color.Black)
 
+        g.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
+        g.PixelOffsetMode = Drawing2D.PixelOffsetMode.Half
+
         If imgTutorialBG IsNot Nothing Then
             Dim imgRatio As Single = imgTutorialBG.Width / imgTutorialBG.Height
             Dim formRatio As Single = Form1.Width / Form1.Height
@@ -104,6 +116,13 @@ Public Class TutorialScreen
 
         Dim currentCard = cards(currentIndex)
         Dim scale As Single = 1.0F
+
+        If Form1.WindowState = FormWindowState.Maximized Then
+            scale = 2.0F
+        Else
+            scale = 1.0F
+        End If
+
         Dim screenWidth = Form1.Width
         Dim screenHeight = Form1.Height
 
