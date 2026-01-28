@@ -67,6 +67,20 @@ Public Module GameStateSerialization
             })
             End If
 
+            If game.world.Damages.HasComponent(entityId) Then
+                Dim d = game.world.Damages.GetComponent(entityId)
+                e.Components("Damages") = JsonSerializer.Serialize(New DamageSave With {
+                    .damage = d.damage
+                })
+            End If
+            If game.world.Cameras.HasComponent(entityId) Then
+                Dim h = game.world.Cameras.GetComponent(entityId)
+                e.Components("Camera") = JsonSerializer.Serialize(New CameraSave With {
+                .viewHeight = h.viewHeight,
+                .viewWidth = h.viewWidth
+            })
+            End If
+
             If game.world.Renders.HasComponent(entityId) Then
                 Dim r = game.world.Renders.GetComponent(entityId)
                 e.Components("Renders") = JsonSerializer.Serialize(New RenderComponent With {
@@ -116,6 +130,13 @@ Public Module GameStateSerialization
                 })
             End If
 
+            If game.world.AudioSources.HasComponent(entityId) Then
+                e.Components("AudioSource") = JsonSerializer.Serialize(game.world.AudioSources.GetComponent(entityId))
+            End If
+            If game.world.AudioTriggers.HasComponent(entityId) Then
+                e.Components("AudioTrigger") = JsonSerializer.Serialize(game.world.AudioTriggers.GetComponent(entityId))
+            End If
+
             If game.world.Enemies.HasComponent(entityId) Then
                 e.Components("Enemy") = Nothing
             End If
@@ -145,10 +166,26 @@ Public Module GameStateSerialization
             Dim id = eSave.Id
             Dim c = eSave.Components
 
+            If c.ContainsKey("WaveData") Then
+                Dim w = JsonSerializer.Deserialize(Of WaveDataSave)(c("WaveData"))
+                world.WaveData.AddComponent(id, New WaveComponent() With {
+                    .EnemiesSpawned = w.EnemiesSpawned,
+                    .RoundNumber = w.RoundNumber,
+                    .State = w.State
+                })
+            End If
+
             If c.ContainsKey("Transform") Then
                 Dim t = JsonSerializer.Deserialize(Of TransformSave)(c("Transform"))
                 world.Transforms.AddComponent(id, New TransformComponent With {
                 .pos = New PointF(t.X, t.Y)
+            })
+            End If
+
+            If c.ContainsKey("Damages") Then
+                Dim d = JsonSerializer.Deserialize(Of DamageSave)(c("Damages"))
+                world.Damages.AddComponent(id, New DamageComponent With {
+                    .damage = d.damage
             })
             End If
 
@@ -168,6 +205,14 @@ Public Module GameStateSerialization
                 world.Healths.AddComponent(id, New Health With {
                 .health = h.health,
                 .maxHealth = h.maxHealth
+            })
+            End If
+
+            If c.ContainsKey("Camera") Then
+                Dim h = JsonSerializer.Deserialize(Of CameraSave)(c("Camera"))
+                world.Cameras.AddComponent(id, New CameraComponent With {
+                .viewHeight = h.viewHeight,
+                .viewWidth = h.viewWidth
             })
             End If
 
@@ -218,6 +263,13 @@ Public Module GameStateSerialization
                 .sA = r.sA,
                 .sB = r.sB
             })
+            End If
+
+            If c.ContainsKey("AudioSource") Then
+                world.AudioSources.AddComponent(id, JsonSerializer.Deserialize(Of AudioSourceComponent)(c("AudioSource")))
+            End If
+            If c.ContainsKey("AudioTrigger") Then
+                world.AudioTriggers.AddComponent(id, JsonSerializer.Deserialize(Of AudioTriggerComponent)(c("AudioTrigger")))
             End If
 
             If c.ContainsKey("Enemy") Then

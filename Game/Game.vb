@@ -43,9 +43,15 @@ Public Class Game
 
         Try
             GameStateSerialization.LoadFromFile(Me, "data.json")
+            world.CreatePlayer()
+
         Catch ex As Exception
             Me.gameState = GameState.Starting
             Me.world = New World(input, Me)
+
+            Dim waveDataId = Me.world.EntityManager.CreateEntity()
+            Me.world.WaveData.AddComponent(waveDataId, New WaveComponent())
+
             Debug.WriteLine(ex.Message)
         End Try
 
@@ -128,7 +134,8 @@ Public Class Game
         Me.world = New World(Form1.input, Me)
         Me.gameState = GameState.Playing
         Me.score = 0
-
+        Dim waveDataId = Me.world.EntityManager.CreateEntity()
+        Me.world.WaveData.AddComponent(waveDataId, New WaveComponent())
         CreateTestWorld()
         AudioEngine.PlayOneShot("button_ui_1", 1.0F)
         Debug.WriteLine("Starting New Game")

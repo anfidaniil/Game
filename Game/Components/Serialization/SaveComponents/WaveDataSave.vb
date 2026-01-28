@@ -1,4 +1,5 @@
-﻿Public Class WaveComponent
+﻿<Serializable>
+Public Class WaveDataSave
     Public State As WaveState = WaveState.FadingIn
     Public RoundNumber As Integer = 1
     Public EnemiesSpawned As Integer = 0
