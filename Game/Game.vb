@@ -36,6 +36,23 @@ Public Class Game
         'AudioEngine.LoadSound("music", New SharpDX.Multimedia.SoundStream(My.Resources.GameResources.guitar_0001))
         'AudioEngine.PlayLoop("music", 1.0F)
     End Sub
+
+    Public Function GetCardScale() As Single
+        Dim baseHeight As Single = 720.0F
+        Dim currentHeight As Single = Form1.Height
+        Return Math.Max(0.5F, currentHeight / baseHeight)
+    End Function
+
+    Public Function GetUIElementScale() As Single
+        Dim currentHeight As Single = Form1.Height
+
+        If currentHeight > 1200 Then
+            Return currentHeight / 720.0F
+        Else
+            Return currentHeight / 900.0F
+        End If
+    End Function
+
     Public Sub New(input As InputState)
         InitializeSounds()
 

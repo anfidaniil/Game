@@ -31,27 +31,17 @@ Public Class TutorialScreen
         cards.Add(New UICard(My.Resources.GameResources.menuCART))
     End Sub
 
-    Private Function GetDynamicScale() As Single
-        Dim baseHeight As Single = 720.0F
-        Dim currentHeight As Single = Form1.Height
-
-        Return Math.Max(0.5F, currentHeight / baseHeight)
-    End Function
-
     Private Sub InitializeButtons()
         Dim screenW As Integer = Form1.Width
         Dim screenH As Integer = Form1.Height
-
-        Dim scale As Single = GetDynamicScale()
+        Dim scale As Single = game.GetUIElementScale()
 
         Dim btnW As Integer = CInt(200 * scale)
         Dim btnH As Integer = CInt(50 * scale)
         Dim spacing As Integer = CInt(40 * scale)
         Dim arrowSize As Integer = CInt(50 * scale)
         Dim sideMargin As Integer = CInt(50 * scale)
-
         Dim bottomMargin As Integer = CInt(150 * scale)
-
         Dim btnY As Integer = screenH - bottomMargin
         Dim totalWidth As Integer = (btnW * 2) + spacing
         Dim startX As Integer = (screenW - totalWidth) \ 2
@@ -121,7 +111,7 @@ Public Class TutorialScreen
         If cards.Count = 0 Then Return
 
         Dim currentCard = cards(currentIndex)
-        Dim scale As Single = GetDynamicScale()
+        Dim scale As Single = game.GetCardScale()
 
         Dim screenWidth = Form1.Width
         Dim screenHeight = Form1.Height
