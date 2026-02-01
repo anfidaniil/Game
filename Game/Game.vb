@@ -49,10 +49,10 @@ Public Class Game
     Public Function GetUIElementScale() As Single
         Dim currentHeight As Single = Form1.Height
 
-        If currentHeight > 1200 Then
+        If currentHeight > 1080 Then
             Return currentHeight / 720.0F
         Else
-            Return currentHeight / 900.0F
+            Return 1.0F
         End If
     End Function
 
