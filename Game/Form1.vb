@@ -105,6 +105,15 @@
                 ElseIf game.gameState = GameState.Menu Then
                     game.gameState = GameState.Playing
                 End If
+            Case Keys.Escape
+                If game.gameState = GameState.GameOver Then
+                    Return
+                End If
+                If game.gameState = GameState.Playing Then
+                    game.gameState = GameState.Menu
+                ElseIf game.gameState = GameState.Menu Then
+                    game.gameState = GameState.Playing
+                End If
         End Select
     End Sub
 
@@ -135,6 +144,10 @@
                 game.startingMenuScreen.HandleMouseClick(e.Location)
             Case GameState.Tutorial
                 game.tutorialScreen.HandleClick(e.Location)
+            Case GameState.ExitConfirmation
+                If game.exitScreen IsNot Nothing Then
+                    game.exitScreen.HandleMouseClick(e.Location)
+                End If
         End Select
     End Sub
 

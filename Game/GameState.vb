@@ -4,4 +4,5 @@
     Playing
     GameOver
     Tutorial
+    ExitConfirmation
 End Enum
