@@ -277,9 +277,11 @@ Public Class World
             .sA = size.X,
             .sB = size.Y
         })
-        'Renders.AddComponent(wall, New RenderComponent With {
-        '   .size = size.X
-        '})
+        Renders.AddComponent(wall, New RenderComponent With {
+           .size = size.X,
+           .spriteX = size.X,
+           .spriteY = size.Y
+        })
         Immovables.AddComponent(wall, New ImmovableComponent)
 
     End Sub

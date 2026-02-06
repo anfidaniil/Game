@@ -251,34 +251,34 @@ Public Class Game
 
         If (Not loadedWithSuccess Or world.Immovables.All.Count = 0) Then
             Dim T As Integer = World.TILE_SIZE / 4
-            Dim H As Integer = T \ 8
+            Dim H As Integer = T \ 2
             CreateMapCollisionBox(
             New PointF(
                 T + H,                 ' center X = left wall column
-                T * 4 + (T * 9) / 2    ' center Y
+                T * 4 + (T * 9) / 2 - H + 16 ' center Y
             ),
             New Point(T, T * 13)
             )
             CreateMapCollisionBox(
                 New PointF(
-                    T * 15 - H,
-                    T * 4 + (T * 9) / 2
+                    T * 15 - 16,
+                    T * 4 + (T * 9) / 2 - H + 16
                 ),
                 New Point(T, T * 13)
             )
             CreateMapCollisionBox(
                 New PointF(
-                    T * 4 + (T * 9) / 2,
-                    T + H
+                    T * 4 + (T * 9) / 2 - H,
+                    T + H - 48
                 ),
                 New Point(T * 13, T)
             )
             CreateMapCollisionBox(
                 New PointF(
-                    T * 4 + (T * 9) / 2,
-                    T * 15 - H
+                    T * 4 + (T * 9) / 2 - 40,
+                    T * 15 - H + 48
                 ),
-                New Point(T * 13, T)
+                New Point(T * 13 - 64 - 16, T)
             )
 
             ''Left-Upper Corner
