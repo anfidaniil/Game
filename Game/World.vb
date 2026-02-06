@@ -49,7 +49,7 @@ Public Class World
     Public Const IFRAMES_DURATION = 0.1F
     Public DEFAULT_POSITION = New PointF(0, 0)
 
-    Public Const TILE_SIZE As Integer = 512
+    Public Const TILE_SIZE As Integer = 256
     Public Const GAME_NAME = "NATA KNIGHT"
 
     Public Const MIN_AUDIO_DIST = 50.0F

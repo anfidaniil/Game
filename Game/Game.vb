@@ -242,15 +242,15 @@ Public Class Game
 
     End Function
     Public Sub CreateLevel()
-        For i = 0 To 3
-            For j = 0 To 3
+        For i = 0 To 7
+            For j = 0 To 7
                 level(New Point(i, j)) = GetTileFromPosition(i, j, level1)
                 levelRenderLast(New Point(i, j)) = GetTileFromPosition(i, j, bottomGate)
             Next
         Next
 
         If (Not loadedWithSuccess Or world.Immovables.All.Count = 0) Then
-            Dim T As Integer = World.TILE_SIZE / 4
+            Dim T As Integer = World.TILE_SIZE / 2
             Dim H As Integer = T \ 2
             CreateMapCollisionBox(
             New PointF(
