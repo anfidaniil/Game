@@ -97,6 +97,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend Shared ReadOnly Property btnNAO() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("btnNAO", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend Shared ReadOnly Property btnNOVOJOGO() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("btnNOVOJOGO", resourceCulture)
@@ -110,6 +120,46 @@ Namespace My.Resources
         Friend Shared ReadOnly Property btnSAIR() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("btnSAIR", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property btnSIM() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("btnSIM", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property btnTUTORIAL() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("btnTUTORIAL", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property btnVOLTAR() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("btnVOLTAR", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property btnVOLTARAOMENU_export() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("btnVOLTARAOMENU-export", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -165,36 +215,6 @@ Namespace My.Resources
         Friend Shared ReadOnly Property button_ui_2() As System.IO.UnmanagedMemoryStream
             Get
                 Return ResourceManager.GetStream("button-ui-2", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend Shared ReadOnly Property btnTUTORIAL() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("btnTUTORIAL", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend Shared ReadOnly Property btnVOLTAR() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("btnVOLTAR", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend Shared ReadOnly Property btnVOLTARAOMENU_export() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("btnVOLTARAOMENU-export", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
