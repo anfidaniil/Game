@@ -9,6 +9,10 @@ Public Class Game
     Public menuScreen As MenuScreen
     Public startingMenuScreen As StartScreen
     Public tutorialScreen As TutorialScreen
+
+    Public exitScreen As ExitScreen
+    Public previousState As GameState
+
     Public gameState As GameState
 
     Public level As New Dictionary(Of Point, Bitmap)
@@ -80,38 +84,9 @@ Public Class Game
 
             Debug.WriteLine(ex.Message)
         End Try
-
-        Me.tutorialScreen = New TutorialScreen(Me)
-        menuScreen = New MenuScreen(
-            Me,
-            Sub() StartNewGame(),
-            Sub() GoBackFromTutorialToGame(),
-            Sub() Restart(),
-            Sub() GoToStartingScreen()
-        )
-        startingMenuScreen = New StartScreen(
-            Me,
-            Sub() StartNewGame(),
-            Sub() Quit(),
-            Sub()
-                AudioEngine.PlayOneShot("button_ui_1", 1.0F)
-                tutorialScreen.BackAction = Sub() gameState = GameState.Starting
-                gameState = GameState.Tutorial
-            End Sub
-        )
+        CreateScreens()
     End Sub
-
-    Public Sub ChangeCameraView()
-        Dim id = world.Cameras.All.First.Key
-        Dim cam = world.Cameras.GetComponent(id)
-        cam.viewHeight = Form1.Height
-        cam.viewWidth = Form1.Width
-
-        Dim savedPage As Integer = 0
-        If Me.tutorialScreen IsNot Nothing Then
-            savedPage = Me.tutorialScreen.currentIndex
-        End If
-
+    Public Sub CreateScreens(Optional savedPage As Integer = 0)
         Me.tutorialScreen = New TutorialScreen(Me, savedPage)
 
         menuScreen = New MenuScreen(
@@ -132,6 +107,34 @@ Public Class Game
                 gameState = GameState.Tutorial
             End Sub
         )
+
+        gameOverUI = New GameOverScreen(
+            Form1.Width,
+            Form1.Height,
+            Sub() StartNewGame(),
+            Sub() Quit(),
+            Sub() GoToStartingScreen()
+        )
+
+        exitScreen = New ExitScreen(
+            Me,
+            Sub() RealQuit(),
+            Sub() CancelExit()
+        )
+    End Sub
+
+    Public Sub ChangeCameraView()
+        Dim id = world.Cameras.All.First.Key
+        Dim cam = world.Cameras.GetComponent(id)
+        cam.viewHeight = Form1.Height
+        cam.viewWidth = Form1.Width
+
+        Dim savedPage As Integer = 0
+        If Me.tutorialScreen IsNot Nothing Then
+            savedPage = Me.tutorialScreen.currentIndex
+        End If
+
+        CreateScreens(savedPage)
     End Sub
 
     Public Sub CreateTestWorld()
@@ -175,11 +178,25 @@ Public Class Game
     End Sub
 
     Public Sub Quit()
+        If gameState = GameState.ExitConfirmation Then Exit Sub
         AudioEngine.PlayOneShot("button_ui_1", 1.0F)
+        previousState = gameState
+        gameState = GameState.ExitConfirmation
+    End Sub
+
+    Public Sub CancelExit()
+        AudioEngine.PlayOneShot("button_ui_1", 1.0F)
+        gameState = previousState
+    End Sub
+
+    Public Sub RealQuit()
+        AudioEngine.PlayOneShot("button_ui_1", 1.0F)
+        Me.gameState = GameState.Starting
         GameStateSerialization.SaveToFile(Me, "data.json")
+        Form1.allowClose = True
         Form1.Close()
     End Sub
-                                            
+
     Public Sub GoToStartingScreen()
         AudioEngine.PlayOneShot("button_ui_1", 1.0F)
         gameState = GameState.Starting
@@ -204,6 +221,7 @@ Public Class Game
 
             Case GameState.Starting
 
+            Case GameState.ExitConfirmation
         End Select
     End Sub
 
@@ -221,7 +239,25 @@ Public Class Game
                 gameOverUI.Draw(g, world)
             Case GameState.Tutorial
                 tutorialScreen.Draw(g, world)
+            Case GameState.ExitConfirmation
+                Select Case previousState
+                    Case GameState.Tutorial
+                        tutorialScreen.Draw(g, world)
 
+                    Case GameState.Playing
+                        world.Draw(g)
+                    Case GameState.Menu
+                        world.Draw(g)
+                        menuScreen.Draw(g, world)
+                    Case GameState.Starting
+                        startingMenuScreen.Draw(g, world)
+                    Case GameState.GameOver
+                        world.Draw(g)
+                        gameOverUI.Draw(g, world)
+                    Case Else
+                        world.Draw(g)
+                End Select
+                exitScreen.Draw(g, world)
         End Select
     End Sub
 

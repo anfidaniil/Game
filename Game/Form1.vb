@@ -1,7 +1,9 @@
-﻿Public Class Form1
+﻿Imports System.ComponentModel
+Public Class Form1
     Public input As InputState
     Private game As Game
     Private lastTime As DateTime
+    Public allowClose As Boolean = False
 
     Private isDebug As Boolean = False
     Private count As Integer = 0
@@ -14,6 +16,17 @@
     Private isMouseDown As Boolean = False
 
     Private running As Boolean = False
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        If allowClose Then Exit Sub
+        If e.CloseReason = CloseReason.UserClosing Then
+            e.Cancel = True
+
+            If game IsNot Nothing Then
+                game.Quit()
+            End If
+        End If
+    End Sub
 
     Private Sub UpdateFireState()
         If input IsNot Nothing Then
@@ -101,6 +114,15 @@
                 ElseIf game.gameState = GameState.Menu Then
                     game.gameState = GameState.Playing
                 End If
+            Case Keys.Escape
+                If game.gameState = GameState.GameOver Then
+                    Return
+                End If
+                If game.gameState = GameState.Playing Then
+                    game.gameState = GameState.Menu
+                ElseIf game.gameState = GameState.Menu Then
+                    game.gameState = GameState.Playing
+                End If
         End Select
     End Sub
 
@@ -131,6 +153,10 @@
                 game.startingMenuScreen.HandleMouseClick(e.Location)
             Case GameState.Tutorial
                 game.tutorialScreen.HandleClick(e.Location)
+            Case GameState.ExitConfirmation
+                If game.exitScreen IsNot Nothing Then
+                    game.exitScreen.HandleMouseClick(e.Location)
+                End If
         End Select
     End Sub
 
