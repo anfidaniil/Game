@@ -4,9 +4,6 @@ Imports Windows.Win32.UI.Input
 Public Class ExitScreen
     Private game As Game
     Public buttons As New List(Of UIButton)
-    Public Class UIButtonYes : Inherits UIButton : End Class
-    Public Class UIButtonNo : Inherits UIButton : End Class
-
     Private imgBG As Bitmap
 
     Public Sub New(gameInstance As Game, yesAction As Action, noAction As Action)
@@ -37,13 +34,13 @@ Public Class ExitScreen
 
         buttons.Add(New UIButtonYes With {
             .bounds = New Rectangle(startX, btnY, btnW, btnH),
-            .text = "Sim",
+            .text = "",
             .onClick = yesAction
         })
 
         buttons.Add(New UIButtonNo With {
             .bounds = New Rectangle(startX + btnW + spacing, btnY, btnW, btnH),
-            .text = "Não",
+            .text = "",
             .onClick = noAction
         })
     End Sub
