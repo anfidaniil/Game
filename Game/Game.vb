@@ -213,13 +213,22 @@ Public Class Game
     Public Sub GoToStartingScreen()
         AudioEngine.PlayOneShot("button_ui_1", 1.0F)
         If gameState = GameState.Menu Or gameState = GameState.Playing Then
-            gameState = GameState.Starting
-            loadedWithSuccess = True
             GameStateSerialization.SaveToFile(Me, "data.json")
+            loadedWithSuccess = True
+
         Else
-            gameState = GameState.Starting
+            loadedWithSuccess = False
+
+            Try
+                If System.IO.File.Exists("data.json") Then
+                    System.IO.File.Delete("data.json")
+                End If
+            Catch ex As Exception
+                Debug.WriteLine("Erro ao apagar save: " & ex.Message)
+            End Try
         End If
-        CreateScreens()
+        gameState = GameState.Starting
+            CreateScreens()
     End Sub
 
     Public Sub GoBackFromTutorialToGame()

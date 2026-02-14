@@ -70,6 +70,14 @@ Namespace My.Resources
         Friend Shared ReadOnly Property ancientTUALETNAYAbumaga() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("ancientTUALETNAYAbumaga", resourceCulture)
+                      Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+  
+  
+        Friend Shared ReadOnly Property btnACERCA_export() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("btnACERCA-export", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
