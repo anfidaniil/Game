@@ -42,10 +42,15 @@ Public Class StartScreen
             .onClick = continueAction
         }
 
-        If Not game.loadedWithSuccess Then
+        If game.loadedWithSuccess Then
+            btnContinue.onClick = continueAction
+        Else
             If btnContinue.sprite IsNot Nothing Then
                 btnContinue.sprite = ToGrayscale(btnContinue.sprite)
             End If
+            btnContinue.onClick = Sub()
+                                      AudioEngine.PlayOneShot("button_ui_2", 1.0F)
+                                  End Sub
         End If
         buttons.Add(btnContinue)
 
@@ -55,9 +60,9 @@ Public Class StartScreen
             .onClick = tutorial
         })
 
-        buttons.Add(New UIButton With {
+        buttons.Add(New UIButtonAcerca With {
             .bounds = New Rectangle(row2StartX, row2Y, buttonWidth, buttonHeight),
-            .text = "Acerca",
+            .text = "",
             .onClick = Sub()
                            AudioEngine.PlayOneShot("button_ui_2", 1.0F)
                        End Sub
